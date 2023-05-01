@@ -5,19 +5,47 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <EditText
-        android:id="@+id/itemToDo"
+    <com.google.android.material.textfield.TextInputLayout
+        app:layout_constraintTop_toTopOf="parent"
+        app:hintEnabled="true"
+        android:hint="ToDo"
+        android:id="@+id/ToDoNameWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/ToDoName"
+        android:singleLine="true"
+        android:imeOptions="actionNext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="ToDo"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="16dp" />
+        tools:layout_editor_absoluteX="16dp" >
+        <requestFocus/>
+    </com.google.android.material.textfield.TextInputEditText>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
+    <com.google.android.material.textfield.TextInputLayout
+        app:layout_constraintTop_toBottomOf="@id/ToDoNameWrapper"
         android:hint="Description"
-        app:layout_constraintTop_toBottomOf="@id/itemToDo"
+        android:id="@+id/ToDoDescriptionWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    <com.google.android.material.textfield.TextInputEditText
+        app:layout_constraintTop_toBottomOf="@id/ToDoNameWrapper"
         android:id="@+id/todoDescription"
+        android:gravity="start"
+        android:lines="10"
+        android:minLines="5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:srcCompat="@drawable/baseline_save_white_24dp"
+        android:layout_margin="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
