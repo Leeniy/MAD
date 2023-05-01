@@ -3,4 +3,5 @@
     <string name="welcome_message">Welcome to MAD S23</string>
     <string name="welcome_message_alternative">Welcome once again to MAD S23!</string>
     <string name="welcome_message_reply_roast">Welcome MAD User!</string>
+    <string name="overview_listitem_selected">Selected:  </string>
 </resources>
