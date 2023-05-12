@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResult;
@@ -23,7 +24,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.dieschnittstelle.mobile.android.skeleton.model.IToDoItemCRUDOperations;
-import org.dieschnittstelle.mobile.android.skeleton.model.SimpleToDoCRUPOperations;
+import org.dieschnittstelle.mobile.android.skeleton.model.RoomToDoItemCRUDOperationsImpl;
+import org.dieschnittstelle.mobile.android.skeleton.model.SimpleToDoCRUPOperationsImpl;
 import org.dieschnittstelle.mobile.android.skeleton.model.ToDoItem;
 
 import java.util.ArrayList;
@@ -38,6 +40,8 @@ public class OverviewActivity extends AppCompatActivity {
     private FloatingActionButton fab;
 
     private IToDoItemCRUDOperations crudOperations;
+
+    private ProgressBar progressBar;
 
     private ActivityResultLauncher<Intent> DetailviewLauncherForEdit = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -71,13 +75,15 @@ public class OverviewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_overview);
 
-        this.crudOperations = new SimpleToDoCRUPOperations();
+        this.crudOperations = new RoomToDoItemCRUDOperationsImpl(this.getApplicationContext());
+        //this.crudOperations = new SimpleToDoCRUPOperationsImpl();
 
         this.toDoListView = findViewById(R.id.toDoListView);
         this.fab = findViewById(R.id.fab);
+
+        this.progressBar = findViewById(R.id.progressBar);
 
         this.fab.setOnClickListener(view -> {
             onCreateNewToDo();
@@ -91,7 +97,7 @@ public class OverviewActivity extends AppCompatActivity {
                 ViewGroup itemView = (ViewGroup) getLayoutInflater().inflate(R.layout.activity_overview_listitem,null);
                 TextView itemNameView = itemView.findViewById(R.id.todoName);
                 ToDoItem item = getItem(position);
-                itemNameView.setText(item.getId() +" " +item.getName());
+                itemNameView.setText(item.getName());
                 return itemView;
             }
         };
@@ -105,7 +111,18 @@ public class OverviewActivity extends AppCompatActivity {
         });
 
         // initialise the list
-        toDoListViewAdapter.addAll(crudOperations.readAllToDoItems());
+        //1. prepare the view for the data access that will take place
+        progressBar.setVisibility(View.VISIBLE);
+        new Thread(() -> {
+            //2. run the data access on a separate thread
+            List<ToDoItem> items = crudOperations.readAllToDoItems();
+            Log.i(OverviewActivity.class.getSimpleName(), "got items: "+ items);
+            //3. get back to the ui thread in order to update the ui
+            runOnUiThread(() -> {
+                toDoListViewAdapter.addAll(items);
+                progressBar.setVisibility(View.GONE);
+            });
+        }).start();
     }
 
     public void onListItemSelected(ToDoItem listitem){
@@ -122,11 +139,14 @@ public class OverviewActivity extends AppCompatActivity {
     }
 
     public void onNewToDoItemReceived(ToDoItem item){
-        // 1. run the crup operation
-        item = this.crudOperations.createToDoItem(item);
-
-        // 2. update the view
-        this.toDoListViewAdapter.add(item);
+        // 1. run the crup operation on a seperate thread
+        new Thread(() -> {
+            ToDoItem createditem = this.crudOperations.createToDoItem(item);
+            // 2. update the view
+            this.runOnUiThread(() -> {
+                this.toDoListViewAdapter.add(createditem);
+            });
+        }).start();
     }
 
     public void onEditedToDoItemReceived(ToDoItem item){

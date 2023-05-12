@@ -23,8 +23,6 @@ public class DetailviewActivity extends AppCompatActivity {
 
     private FloatingActionButton fab;
 
-    private boolean createMode;
-
     private ToDoItem item;
 
     @Override
@@ -63,7 +61,7 @@ public class DetailviewActivity extends AppCompatActivity {
         this.item.setDescription(itemDescription);
         Intent returnIntent = new Intent();
         returnIntent.putExtra(ARG_ITEM, this.item);
-        setResult(createMode ? ITEM_CREATED : ITEM_EDITED, returnIntent);
+        setResult(this.item.getId() == 0L ? ITEM_CREATED : ITEM_EDITED, returnIntent);
         finish();
     }
 }

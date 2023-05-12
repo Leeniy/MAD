@@ -1,16 +1,15 @@
 package org.dieschnittstelle.mobile.android.skeleton.model;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SimpleToDoCRUPOperations implements IToDoItemCRUDOperations{
+public class SimpleToDoCRUPOperationsImpl implements IToDoItemCRUDOperations{
 
     private static long idcounter = 0;
     private List<ToDoItem> items = new ArrayList<>();
 
-    public SimpleToDoCRUPOperations(){
+    public SimpleToDoCRUPOperationsImpl(){
         Arrays.asList("ron", "rita", "george", "harry").forEach(name -> createToDoItem(new ToDoItem(name)));
     }
     @Override
@@ -22,6 +21,12 @@ public class SimpleToDoCRUPOperations implements IToDoItemCRUDOperations{
 
     @Override
     public List<ToDoItem> readAllToDoItems() {
+        try{
+            Thread.sleep(5000);
+        }
+        catch (Exception e){
+
+        }
         return items;
     }
 
