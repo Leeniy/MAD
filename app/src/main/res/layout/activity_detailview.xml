@@ -11,16 +11,18 @@
         android:hint="ToDo"
         android:id="@+id/ToDoNameWrapper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/ToDoName"
-        android:singleLine="true"
-        android:imeOptions="actionNext"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="16dp" >
-        <requestFocus/>
-    </com.google.android.material.textfield.TextInputEditText>
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/ToDoName"
+            android:singleLine="true"
+            android:imeOptions="actionNext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteX="16dp">
+
+            <requestFocus />
+        </com.google.android.material.textfield.TextInputEditText>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -28,15 +30,16 @@
         android:hint="Description"
         android:id="@+id/ToDoDescriptionWrapper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    <com.google.android.material.textfield.TextInputEditText
-        app:layout_constraintTop_toBottomOf="@id/ToDoNameWrapper"
-        android:id="@+id/todoDescription"
-        android:gravity="start"
-        android:lines="10"
-        android:minLines="5"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputEditText
+            app:layout_constraintTop_toBottomOf="@id/ToDoNameWrapper"
+            android:id="@+id/todoDescription"
+            android:gravity="start"
+            android:lines="10"
+            android:minLines="5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -46,6 +49,6 @@
         app:srcCompat="@drawable/baseline_save_white_24dp"
         android:layout_margin="16dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

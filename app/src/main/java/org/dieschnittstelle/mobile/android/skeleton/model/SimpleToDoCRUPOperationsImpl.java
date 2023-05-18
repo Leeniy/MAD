@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SimpleToDoCRUPOperationsImpl implements IToDoItemCRUDOperations{
+public class SimpleToDoCRUPOperationsImpl implements IToDoItemCRUDOperations {
 
     private static long idcounter = 0;
     private List<ToDoItem> items = new ArrayList<>();
 
-    public SimpleToDoCRUPOperationsImpl(){
+    public SimpleToDoCRUPOperationsImpl() {
         Arrays.asList("ron", "rita", "george", "harry").forEach(name -> createToDoItem(new ToDoItem(name)));
     }
+
     @Override
     public ToDoItem createToDoItem(ToDoItem item) {
         item.setId(++idcounter);
@@ -21,10 +22,9 @@ public class SimpleToDoCRUPOperationsImpl implements IToDoItemCRUDOperations{
 
     @Override
     public List<ToDoItem> readAllToDoItems() {
-        try{
+        try {
             Thread.sleep(5000);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
 
         }
         return items;

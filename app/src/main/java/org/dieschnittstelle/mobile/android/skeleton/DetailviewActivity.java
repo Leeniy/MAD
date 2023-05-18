@@ -38,12 +38,11 @@ public class DetailviewActivity extends AppCompatActivity {
         fab = findViewById(R.id.fab);
 
         //B bind data to the view element
-       this.item = (ToDoItem)getIntent().getSerializableExtra(ARG_ITEM);
-        if (item != null){
+        this.item = (ToDoItem) getIntent().getSerializableExtra(ARG_ITEM);
+        if (item != null) {
             itemToDoView.setText(item.getName());
             itemDescriptionView.setText(item.getDescription());
-        }
-        else {
+        } else {
             this.item = new ToDoItem();
         }
 
@@ -54,7 +53,7 @@ public class DetailviewActivity extends AppCompatActivity {
         });
     }
 
-    protected void onItemSaved(){
+    protected void onItemSaved() {
         String itemName = itemToDoView.getText().toString();
         String itemDescription = itemDescriptionView.getText().toString();
         this.item.setName(itemName);

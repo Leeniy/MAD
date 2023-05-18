@@ -3,8 +3,11 @@ package org.dieschnittstelle.mobile.android.skeleton.model;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.Objects;
+
 @Entity
 public class ToDoItem implements Serializable {
 
@@ -12,14 +15,16 @@ public class ToDoItem implements Serializable {
     private long id;
     private String name;
     private String description;
+
+    @SerializedName("done")
     private boolean checked;
 
-    public ToDoItem(){
+    public ToDoItem() {
     }
 
-    public ToDoItem(String name){
+    public ToDoItem(String name) {
         this();
-        this.name= name;
+        this.name = name;
     }
 
     public long getId() {

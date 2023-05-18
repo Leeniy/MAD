@@ -24,6 +24,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.dieschnittstelle.mobile.android.skeleton.model.IToDoItemCRUDOperations;
+import org.dieschnittstelle.mobile.android.skeleton.model.RetrofitToDoItemCRUDOperationsImpl;
 import org.dieschnittstelle.mobile.android.skeleton.model.RoomToDoItemCRUDOperationsImpl;
 import org.dieschnittstelle.mobile.android.skeleton.model.SimpleToDoCRUPOperationsImpl;
 import org.dieschnittstelle.mobile.android.skeleton.model.ToDoItem;
@@ -45,14 +46,13 @@ public class OverviewActivity extends AppCompatActivity {
 
     private ActivityResultLauncher<Intent> DetailviewLauncherForEdit = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>(){
+            new ActivityResultCallback<ActivityResult>() {
                 @Override
-                public void onActivityResult(ActivityResult result){
-                    if (result.getResultCode() == DetailviewActivity.ITEM_EDITED){
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == DetailviewActivity.ITEM_EDITED) {
                         ToDoItem item = (ToDoItem) result.getData().getSerializableExtra(DetailviewActivity.ARG_ITEM);
                         onEditedToDoItemReceived(item);
-                    }
-                    else if (result.getResultCode() == Activity.RESULT_CANCELED){
+                    } else if (result.getResultCode() == Activity.RESULT_CANCELED) {
                         showMessage("edited cancelled!");
                     }
                 }
@@ -61,10 +61,10 @@ public class OverviewActivity extends AppCompatActivity {
 
     private ActivityResultLauncher<Intent> detailviewLauncherForCreate = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>(){
+            new ActivityResultCallback<ActivityResult>() {
                 @Override
-                public void onActivityResult(ActivityResult result){
-                    if (result.getResultCode() == DetailviewActivity.ITEM_CREATED){
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == DetailviewActivity.ITEM_CREATED) {
                         ToDoItem item = (ToDoItem) result.getData().getSerializableExtra(DetailviewActivity.ARG_ITEM);
                         onNewToDoItemReceived(item);
                     }
@@ -77,7 +77,7 @@ public class OverviewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
 
-        this.crudOperations = new RoomToDoItemCRUDOperationsImpl(this.getApplicationContext());
+        this.crudOperations = ((ToDoItemApplication) getApplication()).getCRUDOperations();
         //this.crudOperations = new SimpleToDoCRUPOperationsImpl();
 
         this.toDoListView = findViewById(R.id.toDoListView);
@@ -90,11 +90,11 @@ public class OverviewActivity extends AppCompatActivity {
         });
 
         // prepare the List view
-        this.toDoListViewAdapter = new ArrayAdapter<>(this, R.layout.activity_overview_listitem, listData){
+        this.toDoListViewAdapter = new ArrayAdapter<>(this, R.layout.activity_overview_listitem, listData) {
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                ViewGroup itemView = (ViewGroup) getLayoutInflater().inflate(R.layout.activity_overview_listitem,null);
+                ViewGroup itemView = (ViewGroup) getLayoutInflater().inflate(R.layout.activity_overview_listitem, null);
                 TextView itemNameView = itemView.findViewById(R.id.todoName);
                 ToDoItem item = getItem(position);
                 itemNameView.setText(item.getName());
@@ -116,7 +116,7 @@ public class OverviewActivity extends AppCompatActivity {
         new Thread(() -> {
             //2. run the data access on a separate thread
             List<ToDoItem> items = crudOperations.readAllToDoItems();
-            Log.i(OverviewActivity.class.getSimpleName(), "got items: "+ items);
+            Log.i(OverviewActivity.class.getSimpleName(), "got items: " + items);
             //3. get back to the ui thread in order to update the ui
             runOnUiThread(() -> {
                 toDoListViewAdapter.addAll(items);
@@ -125,7 +125,7 @@ public class OverviewActivity extends AppCompatActivity {
         }).start();
     }
 
-    public void onListItemSelected(ToDoItem listitem){
+    public void onListItemSelected(ToDoItem listitem) {
 //        DetailviewActivity detailviewActivity = new DetailviewActivity();
 //        detailviewActivity.onCreate(null);
         Intent callDetailviewIntent = new Intent(this, DetailviewActivity.class);
@@ -134,11 +134,11 @@ public class OverviewActivity extends AppCompatActivity {
         DetailviewLauncherForEdit.launch(callDetailviewIntent);
     }
 
-    public void onCreateNewToDo(){
+    public void onCreateNewToDo() {
         detailviewLauncherForCreate.launch(new Intent(this, DetailviewActivity.class));
     }
 
-    public void onNewToDoItemReceived(ToDoItem item){
+    public void onNewToDoItemReceived(ToDoItem item) {
         // 1. run the crup operation on a seperate thread
         new Thread(() -> {
             ToDoItem createditem = this.crudOperations.createToDoItem(item);
@@ -149,17 +149,23 @@ public class OverviewActivity extends AppCompatActivity {
         }).start();
     }
 
-    public void onEditedToDoItemReceived(ToDoItem item){
-        Log.i(OverviewActivity.class.getSimpleName(), "item id: " + item.getId()+ ","+item.getName());
-        int posOfToDoItemInList = toDoListViewAdapter.getPosition(item);
-        ToDoItem itemInList = toDoListViewAdapter.getItem(posOfToDoItemInList);
-        itemInList.setName(item.getName());
-        itemInList.setDescription(item.getDescription());
-        itemInList.setChecked(item.isChecked());
-        toDoListViewAdapter.notifyDataSetChanged();
+    public void onEditedToDoItemReceived(ToDoItem item) {
+        new Thread(() -> {
+            this.crudOperations.updateToDoItem(item);
+            runOnUiThread(() -> {
+                Log.i(OverviewActivity.class.getSimpleName(), "item id: " + item.getId() + "," + item.getName());
+                int posOfToDoItemInList = toDoListViewAdapter.getPosition(item);
+                ToDoItem itemInList = toDoListViewAdapter.getItem(posOfToDoItemInList);
+                itemInList.setName(item.getName());
+                itemInList.setDescription(item.getDescription());
+                itemInList.setChecked(item.isChecked());
+                toDoListViewAdapter.notifyDataSetChanged();
+            });
+        }).start();
+
     }
 
-    public void showMessage(String msg){
+    public void showMessage(String msg) {
 //        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         Snackbar.make(findViewById(R.id.rootView), msg, Snackbar.LENGTH_SHORT).show();
     }

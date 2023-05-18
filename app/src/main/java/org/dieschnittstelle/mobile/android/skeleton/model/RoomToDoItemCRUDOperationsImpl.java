@@ -13,10 +13,10 @@ import androidx.room.Update;
 
 import java.util.List;
 
-public class RoomToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperations{
+public class RoomToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperations {
 
     @Dao
-    public static interface ToDoItemDao{
+    public static interface ToDoItemDao {
 
         @Query("select * from todoitem")
         public List<ToDoItem> readAll();
@@ -31,7 +31,7 @@ public class RoomToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperations{
         public void update(ToDoItem item);
 
         @Delete
-        public  void delete(ToDoItem item);
+        public void delete(ToDoItem item);
     }
 
     @Database(entities = {ToDoItem.class}, version = 1)
@@ -42,7 +42,7 @@ public class RoomToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperations{
 
     private ToDoItemDatabase db;
 
-    public RoomToDoItemCRUDOperationsImpl(Context context){
+    public RoomToDoItemCRUDOperationsImpl(Context context) {
         db = Room.databaseBuilder(context, ToDoItemDatabase.class, "todoitems.db").build();
     }
 

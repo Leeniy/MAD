@@ -4,14 +4,14 @@ import java.util.List;
 
 public interface IToDoItemCRUDOperations {
 
-    public ToDoItem createToDoItem (ToDoItem item);
+    public ToDoItem createToDoItem(ToDoItem item);
 
     public List<ToDoItem> readAllToDoItems();
 
-    public ToDoItem readToDoItem (long id);
+    public ToDoItem readToDoItem(long id);
 
-    public boolean updateToDoItem (ToDoItem item);
+    public boolean updateToDoItem(ToDoItem item);
 
-    public boolean deleteToDoItem (long id);
+    public boolean deleteToDoItem(long id);
 
 }
