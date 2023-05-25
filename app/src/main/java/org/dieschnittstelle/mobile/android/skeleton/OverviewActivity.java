@@ -1,7 +1,9 @@
 package org.dieschnittstelle.mobile.android.skeleton;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +30,7 @@ import org.dieschnittstelle.mobile.android.skeleton.model.RetrofitToDoItemCRUDOp
 import org.dieschnittstelle.mobile.android.skeleton.model.RoomToDoItemCRUDOperationsImpl;
 import org.dieschnittstelle.mobile.android.skeleton.model.SimpleToDoCRUPOperationsImpl;
 import org.dieschnittstelle.mobile.android.skeleton.model.ToDoItem;
+import org.dieschnittstelle.mobile.android.skeleton.util.MADAsyncOperationRunner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +46,8 @@ public class OverviewActivity extends AppCompatActivity {
     private IToDoItemCRUDOperations crudOperations;
 
     private ProgressBar progressBar;
+
+    private MADAsyncOperationRunner operationRunner;
 
     private ActivityResultLauncher<Intent> DetailviewLauncherForEdit = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -72,6 +77,7 @@ public class OverviewActivity extends AppCompatActivity {
             }
     );
 
+    @SuppressLint("StaticFieldLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +90,8 @@ public class OverviewActivity extends AppCompatActivity {
         this.fab = findViewById(R.id.fab);
 
         this.progressBar = findViewById(R.id.progressBar);
+
+        this.operationRunner = new MADAsyncOperationRunner(this, this.progressBar);
 
         this.fab.setOnClickListener(view -> {
             onCreateNewToDo();
@@ -110,27 +118,16 @@ public class OverviewActivity extends AppCompatActivity {
             }
         });
 
-        // initialise the list
-        //1. prepare the view for the data access that will take place
-        progressBar.setVisibility(View.VISIBLE);
-        new Thread(() -> {
-            //2. run the data access on a separate thread
-            List<ToDoItem> items = crudOperations.readAllToDoItems();
-            Log.i(OverviewActivity.class.getSimpleName(), "got items: " + items);
-            //3. get back to the ui thread in order to update the ui
-            runOnUiThread(() -> {
-                toDoListViewAdapter.addAll(items);
-                progressBar.setVisibility(View.GONE);
-            });
-        }).start();
+        operationRunner.run(
+                // Supplier (= the operation)
+                () -> crudOperations.readAllToDoItems(),
+                // Consumer (= the reaction to the operation result)
+                toDoItems -> toDoListViewAdapter.addAll(toDoItems));
     }
 
     public void onListItemSelected(ToDoItem listitem) {
-//        DetailviewActivity detailviewActivity = new DetailviewActivity();
-//        detailviewActivity.onCreate(null);
         Intent callDetailviewIntent = new Intent(this, DetailviewActivity.class);
         callDetailviewIntent.putExtra(DetailviewActivity.ARG_ITEM, listitem);
-//        startActivity(callDetailviewIntent);
         DetailviewLauncherForEdit.launch(callDetailviewIntent);
     }
 
@@ -139,34 +136,28 @@ public class OverviewActivity extends AppCompatActivity {
     }
 
     public void onNewToDoItemReceived(ToDoItem item) {
-        // 1. run the crup operation on a seperate thread
-        new Thread(() -> {
-            ToDoItem createditem = this.crudOperations.createToDoItem(item);
-            // 2. update the view
-            this.runOnUiThread(() -> {
-                this.toDoListViewAdapter.add(createditem);
-            });
-        }).start();
+        operationRunner.run(
+                () -> this.crudOperations.createToDoItem(item),
+                createdToDoItem -> this.toDoListViewAdapter.add(createdToDoItem)
+        );
     }
 
     public void onEditedToDoItemReceived(ToDoItem item) {
-        new Thread(() -> {
-            this.crudOperations.updateToDoItem(item);
-            runOnUiThread(() -> {
-                Log.i(OverviewActivity.class.getSimpleName(), "item id: " + item.getId() + "," + item.getName());
-                int posOfToDoItemInList = toDoListViewAdapter.getPosition(item);
-                ToDoItem itemInList = toDoListViewAdapter.getItem(posOfToDoItemInList);
-                itemInList.setName(item.getName());
-                itemInList.setDescription(item.getDescription());
-                itemInList.setChecked(item.isChecked());
-                toDoListViewAdapter.notifyDataSetChanged();
-            });
-        }).start();
-
+        this.operationRunner.run(
+                () -> this.crudOperations.updateToDoItem(item),
+                updated -> {
+                    Log.i(OverviewActivity.class.getSimpleName(), "item id: " + item.getId() + "," + item.getName());
+                    int posOfToDoItemInList = toDoListViewAdapter.getPosition(item);
+                    ToDoItem itemInList = toDoListViewAdapter.getItem(posOfToDoItemInList);
+                    itemInList.setName(item.getName());
+                    itemInList.setDescription(item.getDescription());
+                    itemInList.setChecked(item.isChecked());
+                    toDoListViewAdapter.notifyDataSetChanged();
+                }
+        );
     }
 
     public void showMessage(String msg) {
-//        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         Snackbar.make(findViewById(R.id.rootView), msg, Snackbar.LENGTH_SHORT).show();
     }
 }
