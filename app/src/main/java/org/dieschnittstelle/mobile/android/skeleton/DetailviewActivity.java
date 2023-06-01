@@ -2,16 +2,17 @@ package org.dieschnittstelle.mobile.android.skeleton;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.dieschnittstelle.mobile.android.skeleton.databinding.ActivityDetailviewBinding;
 import org.dieschnittstelle.mobile.android.skeleton.model.ToDoItem;
+import org.dieschnittstelle.mobile.android.skeleton.viewmodel.DetailviewViewModelImpl;
 
 public class DetailviewActivity extends AppCompatActivity {
 
@@ -20,33 +21,54 @@ public class DetailviewActivity extends AppCompatActivity {
 
     public static final int ITEM_EDITED = 20;
 
-    private ToDoItem item;
-
     private ActivityDetailviewBinding binding;
+
+    private DetailviewViewModelImpl viewmodel;
+
+    public DetailviewActivity(){
+        Log.i(DetailviewActivity.class.getSimpleName(), "consructor invoked");
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.i(DetailviewActivity.class.getSimpleName(), "onCreate invoked");
+
+        this.viewmodel = new ViewModelProvider(this).get(DetailviewViewModelImpl.class);
+
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_detailview);
 
-        this.item = (ToDoItem) getIntent().getSerializableExtra(ARG_ITEM);
-        if (item == null) {
-            this.item = new ToDoItem();
+        if (this.viewmodel.getItem() == null) {
+            ToDoItem item = (ToDoItem) getIntent().getSerializableExtra(ARG_ITEM);
+            if (item == null){
+                this.viewmodel.setItem(new ToDoItem());
+            }
+            else {
+                this.viewmodel.setItem(item);
+            }
+        }
+        else {
+            Log.i(DetailviewActivity.class.getSimpleName(), "use item from viewmodel: " + this.viewmodel.getItem());
         }
 
-        this.binding.setController(this);
+        this.viewmodel.getSavedOcurred().observe(this, occurred -> {
+            onItemSaved();
+        });
 
+        this.binding.setViewmodel(this.viewmodel);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     public void onItemSaved() {
         Intent returnIntent = new Intent();
-        returnIntent.putExtra(ARG_ITEM, this.item);
-        setResult(this.item.getId() == 0L ? ITEM_CREATED : ITEM_EDITED, returnIntent);
+        returnIntent.putExtra(ARG_ITEM, this.viewmodel.getItem());
+        setResult(this.viewmodel.getItem().getId() == 0L ? ITEM_CREATED : ITEM_EDITED, returnIntent);
         finish();
     }
 
-    public ToDoItem getItem() {
-        return item;
-    }
 }

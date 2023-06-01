@@ -3,7 +3,6 @@ package org.dieschnittstelle.mobile.android.skeleton;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,16 +20,14 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.dieschnittstelle.mobile.android.skeleton.model.IToDoItemCRUDOperations;
-import org.dieschnittstelle.mobile.android.skeleton.model.RetrofitToDoItemCRUDOperationsImpl;
-import org.dieschnittstelle.mobile.android.skeleton.model.RoomToDoItemCRUDOperationsImpl;
-import org.dieschnittstelle.mobile.android.skeleton.model.SimpleToDoCRUPOperationsImpl;
 import org.dieschnittstelle.mobile.android.skeleton.model.ToDoItem;
 import org.dieschnittstelle.mobile.android.skeleton.util.MADAsyncOperationRunner;
+import org.dieschnittstelle.mobile.android.skeleton.viewmodel.OverviewViewModelImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,11 +115,23 @@ public class OverviewActivity extends AppCompatActivity {
             }
         });
 
-        operationRunner.run(
-                // Supplier (= the operation)
-                () -> crudOperations.readAllToDoItems(),
-                // Consumer (= the reaction to the operation result)
-                toDoItems -> toDoListViewAdapter.addAll(toDoItems));
+        OverviewViewModelImpl overviewViewModel = new ViewModelProvider(this).get(OverviewViewModelImpl.class);
+
+        if (overviewViewModel.getToDoItem() == null){
+            operationRunner.run(
+                    // Supplier (= the operation)
+                    () -> crudOperations.readAllToDoItems(),
+                    // Consumer (= the reaction to the operation result)
+                    toDoItems -> {
+                        toDoListViewAdapter.addAll(toDoItems);
+                        overviewViewModel.setItems(toDoItems);
+                    });
+        }
+        else {
+            toDoListViewAdapter.addAll(overviewViewModel.getToDoItem());
+        }
+
+
     }
 
     public void onListItemSelected(ToDoItem listitem) {
@@ -158,6 +167,6 @@ public class OverviewActivity extends AppCompatActivity {
     }
 
     public void showMessage(String msg) {
-        Snackbar.make(findViewById(R.id.rootView), msg, Snackbar.LENGTH_SHORT).show();
+ //       Snackbar.make(findViewById(R.id.rootView), msg, Snackbar.LENGTH_SHORT).show();
     }
 }
