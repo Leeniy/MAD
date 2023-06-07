@@ -60,12 +60,12 @@ public class ToDoItem implements Serializable {
         return favourite;
     }
 
-    public void setChecked(boolean favourite) {
-        this.checked = favourite;
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 
-    public void setFavourite(boolean checked) {
-        this.favourite = checked;
+    public void setFavourite(boolean favourite) {
+        this.favourite = favourite;
     }
 
     @Override
