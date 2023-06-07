@@ -35,9 +35,9 @@ public class DetailviewActivity extends AppCompatActivity {
 
         Log.i(DetailviewActivity.class.getSimpleName(), "onCreate invoked");
 
-        this.viewmodel = new ViewModelProvider(this).get(DetailviewViewModelImpl.class);
-
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_detailview);
+
+        this.viewmodel = new ViewModelProvider(this).get(DetailviewViewModelImpl.class);
 
         if (this.viewmodel.getItem() == null) {
             ToDoItem item = (ToDoItem) getIntent().getSerializableExtra(ARG_ITEM);
