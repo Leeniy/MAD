@@ -18,6 +18,7 @@ public class ToDoItem implements Serializable {
 
     @SerializedName("done")
     private boolean checked;
+    private boolean favourite;
 
     public ToDoItem() {
     }
@@ -55,8 +56,16 @@ public class ToDoItem implements Serializable {
         return checked;
     }
 
-    public void setChecked(boolean checked) {
-        this.checked = checked;
+    public boolean isFavourite() {
+        return favourite;
+    }
+
+    public void setChecked(boolean favourite) {
+        this.checked = favourite;
+    }
+
+    public void setFavourite(boolean checked) {
+        this.favourite = checked;
     }
 
     @Override
