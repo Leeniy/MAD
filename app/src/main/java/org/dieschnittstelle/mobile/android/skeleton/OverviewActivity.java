@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -20,16 +22,21 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
+import org.dieschnittstelle.mobile.android.skeleton.databinding.ActivityDetailviewBinding;
+import org.dieschnittstelle.mobile.android.skeleton.databinding.ActivityOverviewListitemBinding;
 import org.dieschnittstelle.mobile.android.skeleton.model.IToDoItemCRUDOperations;
 import org.dieschnittstelle.mobile.android.skeleton.model.ToDoItem;
 import org.dieschnittstelle.mobile.android.skeleton.util.MADAsyncOperationRunner;
 import org.dieschnittstelle.mobile.android.skeleton.viewmodel.OverviewViewModelImpl;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class OverviewActivity extends AppCompatActivity {
@@ -45,6 +52,11 @@ public class OverviewActivity extends AppCompatActivity {
     private ProgressBar progressBar;
 
     private MADAsyncOperationRunner operationRunner;
+
+    public static final Comparator<ToDoItem> NAME_COMPARATOR = Comparator.comparing(ToDoItem::getName);
+    public static final Comparator<ToDoItem> CHECKED_AND_NAME_COMPARATOR = Comparator.comparing(ToDoItem::isChecked).thenComparing(ToDoItem::getName);
+
+    private Comparator<ToDoItem> currentComparator = NAME_COMPARATOR;
 
     private ActivityResultLauncher<Intent> DetailviewLauncherForEdit = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -98,11 +110,17 @@ public class OverviewActivity extends AppCompatActivity {
         this.toDoListViewAdapter = new ArrayAdapter<>(this, R.layout.activity_overview_listitem, listData) {
             @NonNull
             @Override
-            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                ViewGroup itemView = (ViewGroup) getLayoutInflater().inflate(R.layout.activity_overview_listitem, null);
-                TextView itemNameView = itemView.findViewById(R.id.todoName);
-                ToDoItem item = getItem(position);
-                itemNameView.setText(item.getName());
+            public View getView(int position, @Nullable View existingListToDoItemView, @NonNull ViewGroup parent) {
+
+                ToDoItem item = super.getItem(position);
+                ActivityOverviewListitemBinding itemBinding = existingListToDoItemView != null
+                        ? (ActivityOverviewListitemBinding) existingListToDoItemView.getTag()
+                        : DataBindingUtil.inflate(getLayoutInflater(), R.layout.activity_overview_listitem, null, false);
+                itemBinding.setItem(item);
+                itemBinding.setController(OverviewActivity.this);
+
+                View itemView = itemBinding.getRoot();
+                itemView.setTag(itemBinding);
                 return itemView;
             }
         };
@@ -125,6 +143,7 @@ public class OverviewActivity extends AppCompatActivity {
                     toDoItems -> {
                         toDoListViewAdapter.addAll(toDoItems);
                         overviewViewModel.setItems(toDoItems);
+                        sortToDoItems();
                     });
         }
         else {
@@ -142,6 +161,7 @@ public class OverviewActivity extends AppCompatActivity {
 
     public void onCreateNewToDo() {
         detailviewLauncherForCreate.launch(new Intent(this, DetailviewActivity.class));
+        sortToDoItems();
     }
 
     public void onNewToDoItemReceived(ToDoItem item) {
@@ -161,12 +181,48 @@ public class OverviewActivity extends AppCompatActivity {
                     itemInList.setName(item.getName());
                     itemInList.setDescription(item.getDescription());
                     itemInList.setChecked(item.isChecked());
-                    toDoListViewAdapter.notifyDataSetChanged();
+                    sortToDoItems();
                 }
         );
     }
 
     public void showMessage(String msg) {
- //       Snackbar.make(findViewById(R.id.rootView), msg, Snackbar.LENGTH_SHORT).show();
+       Snackbar.make(findViewById(R.id.rootView), msg, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.overview_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == R.id.sortList){
+            this.currentComparator = CHECKED_AND_NAME_COMPARATOR;
+            sortToDoItems();
+            return true;
+        }
+        else if (item.getItemId() == R.id.deleteAllItemsLocally){
+            showMessage("DELETE ALL ITEMS LOCALLY");
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void sortToDoItems(){
+        this.listData.sort(this.currentComparator);
+        this.toDoListViewAdapter.notifyDataSetChanged();
+    }
+
+    public void onCheckedChangeListView(ToDoItem item){
+        this.operationRunner.run(
+                () -> crudOperations.updateToDoItem(item),
+                updateditem -> {
+                    this.sortToDoItems();
+                }
+        );
+
     }
 }

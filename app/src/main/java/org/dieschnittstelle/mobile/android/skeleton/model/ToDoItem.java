@@ -1,5 +1,7 @@
 package org.dieschnittstelle.mobile.android.skeleton.model;
 
+import android.app.DatePickerDialog;
+
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 

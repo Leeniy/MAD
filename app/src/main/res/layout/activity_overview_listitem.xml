@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="item"
+            type="org.dieschnittstelle.mobile.android.skeleton.model.ToDoItem" />
+        <variable
+            name="controller"
+            type="org.dieschnittstelle.mobile.android.skeleton.OverviewActivity" />
+    </data>
+<LinearLayout
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -8,13 +18,17 @@
         android:layout_gravity="center_vertical"
         android:focusable="false"
         android:id="@+id/todoChecked"
+        android:checked="@={item.checked}"
+        android:onClick="@{() -> controller.onCheckedChangeListView(item)}"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/todoName"
+        android:text="@{item.name}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:textSize="30dp" />
 </LinearLayout>
+</layout>

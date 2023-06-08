@@ -31,4 +31,6 @@ public class DetailviewViewModelImpl extends ViewModel implements IDetailviewVie
     public void setItem(ToDoItem item) {
         this.item = item;
     }
+
+
 }

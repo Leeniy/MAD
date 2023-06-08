@@ -9,7 +9,7 @@ import java.util.List;
 public class OverviewViewModelImpl extends ViewModel implements IOverviewViewModel{
 
     private List<ToDoItem> items;
-
+    private ToDoItem item;
 
     public void setItems(List<ToDoItem> items) {
         this.items = items;
@@ -18,5 +18,9 @@ public class OverviewViewModelImpl extends ViewModel implements IOverviewViewMod
     @Override
     public List<ToDoItem> getToDoItem() {
         return items;
+    }
+
+    public void setItem(ToDoItem item) {
+        this.item = item;
     }
 }

@@ -1,5 +1,7 @@
 package org.dieschnittstelle.mobile.android.skeleton.viewmodel;
 
+import android.view.View;
+
 import org.dieschnittstelle.mobile.android.skeleton.model.ToDoItem;
 
 public interface IDetailviewViewmodel {
