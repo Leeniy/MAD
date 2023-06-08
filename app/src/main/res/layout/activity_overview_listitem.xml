@@ -10,76 +10,38 @@
             type="org.dieschnittstelle.mobile.android.skeleton.OverviewActivity" />
     </data>
 
-<LinearLayout
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <CheckBox
-        android:layout_gravity="center_vertical"
-        android:focusable="false"
-        android:id="@+id/todoChecked"
-        android:checked="@={item.checked}"
-        android:onClick="@{() -> controller.onCheckedChangeListView(item)}"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
-    <CheckBox
-        android:layout_gravity="center_vertical"
-        android:focusable="false"
-        android:id="@+id/todoFavoriteChecked"
-        android:checked="@={item.favourite}"
-        android:onClick="@{() -> controller.onCheckedChangeListView(item)}"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="?android:attr/starStyle"
-        android:layout_marginEnd="10dp"/>
-    </LinearLayout>
+        <CheckBox
+            android:layout_gravity="center_vertical"
+            android:focusable="false"
+            android:id="@+id/todoChecked"
+            android:checked="@={item.checked}"
+            android:onClick="@{() -> controller.onCheckedChangeListView(item)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-    <LinearLayout
-        android:layout_width="240dp"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        <CheckBox
+            android:layout_gravity="center_vertical"
+            android:focusable="false"
+            android:id="@+id/todoFavoriteChecked"
+            android:checked="@={item.favourite}"
+            android:onClick="@{() -> controller.onCheckedChangeListView(item)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:attr/starStyle"
+            android:layout_marginEnd="10dp"/>
 
         <TextView
             android:id="@+id/todoName"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:lines="1"
             android:text="@{item.name}"
-            android:textSize="30sp" />
-
-        <TextView
-            android:id="@+id/todoate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:lines="1"
-            android:text="08.06.2023 16:00"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/todoDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@{item.Description}"
-            android:textSize="20sp" />
+            android:padding="10dp"
+            android:textSize="30dp" />
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/showMoreButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="..." />
-    </LinearLayout>
-</LinearLayout>
 </layout>
 
