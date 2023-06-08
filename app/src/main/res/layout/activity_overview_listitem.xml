@@ -42,6 +42,22 @@
             android:text="@{item.name}"
             android:padding="10dp"
             android:textSize="30dp" />
+
+        <TextView
+            android:id="@+id/todoate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:text="08.06.2023 16:00"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/todoDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="@{item.Description}"
+            android:textSize="20sp" />
     </LinearLayout>
 </layout>
 
