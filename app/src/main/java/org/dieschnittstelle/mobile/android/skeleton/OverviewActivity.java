@@ -13,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -28,7 +27,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-import org.dieschnittstelle.mobile.android.skeleton.databinding.ActivityDetailviewBinding;
 import org.dieschnittstelle.mobile.android.skeleton.databinding.ActivityOverviewListitemBinding;
 import org.dieschnittstelle.mobile.android.skeleton.model.IToDoItemCRUDOperations;
 import org.dieschnittstelle.mobile.android.skeleton.model.ToDoItem;
@@ -53,10 +51,12 @@ public class OverviewActivity extends AppCompatActivity {
 
     private MADAsyncOperationRunner operationRunner;
 
-    public static final Comparator<ToDoItem> NAME_COMPARATOR = Comparator.comparing(ToDoItem::getName);
+    ActivityOverviewListitemBinding binding;
+
+    public static final Comparator<ToDoItem> FAVOURITE_AND_DONE_AND_DATE_COMPARATOR = Comparator.comparing(ToDoItem::isFavourite).reversed().thenComparing(ToDoItem::isChecked);
     public static final Comparator<ToDoItem> CHECKED_AND_NAME_COMPARATOR = Comparator.comparing(ToDoItem::isChecked).thenComparing(ToDoItem::getName);
 
-    private Comparator<ToDoItem> currentComparator = NAME_COMPARATOR;
+    private Comparator<ToDoItem> currentComparator = FAVOURITE_AND_DONE_AND_DATE_COMPARATOR;
 
     private ActivityResultLauncher<Intent> DetailviewLauncherForEdit = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -89,6 +89,7 @@ public class OverviewActivity extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
 
@@ -149,8 +150,6 @@ public class OverviewActivity extends AppCompatActivity {
         else {
             toDoListViewAdapter.addAll(overviewViewModel.getToDoItem());
         }
-
-
     }
 
     public void onListItemSelected(ToDoItem listitem) {
@@ -223,6 +222,5 @@ public class OverviewActivity extends AppCompatActivity {
                     this.sortToDoItems();
                 }
         );
-
     }
 }
