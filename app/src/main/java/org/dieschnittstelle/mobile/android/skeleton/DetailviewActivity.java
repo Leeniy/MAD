@@ -71,4 +71,8 @@ public class DetailviewActivity extends AppCompatActivity {
         finish();
     }
 
+    public void onItemDelete(){
+
+    }
+
 }

@@ -41,7 +41,7 @@ public class SimpleToDoCRUPOperationsImpl implements IToDoItemCRUDOperations {
     }
 
     @Override
-    public boolean deleteToDoItem(long id) {
+    public boolean deleteToDoItem(ToDoItem item) {
         return false;
     }
 }

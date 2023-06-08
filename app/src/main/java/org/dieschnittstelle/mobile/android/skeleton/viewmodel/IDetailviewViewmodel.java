@@ -9,4 +9,6 @@ public interface IDetailviewViewmodel {
     public ToDoItem getItem();
 
     public void onItemSaved();
+
+    public void onItemDelete();
 }

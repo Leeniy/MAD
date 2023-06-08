@@ -8,6 +8,7 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -28,6 +29,9 @@ public class RetrofitToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperatio
 
         @PUT("/api/todos/{todoId}")
         public Call<ToDoItem> update(@Path("todoId") long id, @Body ToDoItem item);
+
+        @DELETE("/api/todos/{todoId}")
+        public Call<Void> delete(@Path("todoId") long id);
     }
 
     private ToDoItemResource toDoItemResource;
@@ -89,7 +93,12 @@ public class RetrofitToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperatio
     }
 
     @Override
-    public boolean deleteToDoItem(long id) {
-        return false;
+    public boolean deleteToDoItem(ToDoItem item) {
+        try {
+            this.toDoItemResource.delete(item.getId()).execute().body();
+            return true;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

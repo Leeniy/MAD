@@ -12,6 +12,6 @@ public interface IToDoItemCRUDOperations {
 
     public boolean updateToDoItem(ToDoItem item);
 
-    public boolean deleteToDoItem(long id);
+    public boolean deleteToDoItem(ToDoItem item);
 
 }

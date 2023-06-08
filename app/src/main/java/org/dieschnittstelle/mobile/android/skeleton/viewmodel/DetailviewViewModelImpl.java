@@ -3,15 +3,13 @@ package org.dieschnittstelle.mobile.android.skeleton.viewmodel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import org.dieschnittstelle.mobile.android.skeleton.DetailviewActivity;
 import org.dieschnittstelle.mobile.android.skeleton.model.ToDoItem;
 
 public class DetailviewViewModelImpl extends ViewModel implements IDetailviewViewmodel{
 
     private ToDoItem item;
 
-    private MutableLiveData<Boolean> savedOcurred = new MutableLiveData<>();
-
+    private final MutableLiveData<Boolean> savedOcurred = new MutableLiveData<>();
 
     @Override
     public ToDoItem getItem() {
@@ -32,5 +30,8 @@ public class DetailviewViewModelImpl extends ViewModel implements IDetailviewVie
         this.item = item;
     }
 
+    @Override
+    public void onItemDelete() {
 
+    }
 }
