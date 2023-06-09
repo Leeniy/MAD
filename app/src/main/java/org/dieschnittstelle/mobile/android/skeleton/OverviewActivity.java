@@ -43,6 +43,8 @@ public class OverviewActivity extends AppCompatActivity {
     private List<ToDoItem> listData = new ArrayList<>();
     private ArrayAdapter<ToDoItem> toDoListViewAdapter;
 
+    OverviewViewModelImpl overviewViewModel;
+
     private FloatingActionButton fab;
 
     private IToDoItemCRUDOperations crudOperations;
@@ -50,15 +52,6 @@ public class OverviewActivity extends AppCompatActivity {
     private ProgressBar progressBar;
 
     private MADAsyncOperationRunner operationRunner;
-
-    private ActivityOverviewListitemBinding binding;
-
-    public static final Comparator<ToDoItem> DONE = Comparator.comparing(ToDoItem::isChecked);
-    public static final Comparator<ToDoItem> FAVOURITE = Comparator.comparing(ToDoItem::isFavourite);
-    public static final Comparator<ToDoItem> FAVOURITE_AND_DONE_AND_DATE_COMPARATOR = DONE.thenComparing(FAVOURITE.reversed());
-    public static final Comparator<ToDoItem> CHECKED_AND_NAME_COMPARATOR = Comparator.comparing(ToDoItem::isChecked).thenComparing(ToDoItem::getName);
-
-    private Comparator<ToDoItem> currentComparator = FAVOURITE_AND_DONE_AND_DATE_COMPARATOR;
 
     private ActivityResultLauncher<Intent> DetailviewLauncherForEdit = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -96,7 +89,6 @@ public class OverviewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_overview);
 
         this.crudOperations = ((ToDoItemApplication) getApplication()).getCRUDOperations();
-        //this.crudOperations = new SimpleToDoCRUPOperationsImpl();
 
         this.toDoListView = findViewById(R.id.toDoListView);
         this.fab = findViewById(R.id.fab);
@@ -114,17 +106,22 @@ public class OverviewActivity extends AppCompatActivity {
             @NonNull
             @Override
             public View getView(int position, @Nullable View existingListToDoItemView, @NonNull ViewGroup parent) {
-
+                Log.i(OverviewActivity.class.getSimpleName(), "getView() has been called for position " + position + ", convertView is null");
+                ActivityOverviewListitemBinding itemBinding = null;
+                if (existingListToDoItemView != null){
+                    Log.i(OverviewActivity.class.getSimpleName(), "existingListToDoItemView is not null. Read out binding via getTag().");
+                    itemBinding = (ActivityOverviewListitemBinding) existingListToDoItemView.getTag();
+                }
+                else {
+                    Log.i(OverviewActivity.class.getSimpleName(), "existingListToDoItemView is null. Create new binding object and set it as tag.");
+                    itemBinding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.activity_overview_listitem, null, false);
+                    itemBinding.getRoot().setTag(itemBinding);
+                }
                 ToDoItem item = super.getItem(position);
-                ActivityOverviewListitemBinding itemBinding = existingListToDoItemView != null
-                        ? (ActivityOverviewListitemBinding) existingListToDoItemView.getTag()
-                        : DataBindingUtil.inflate(getLayoutInflater(), R.layout.activity_overview_listitem, null, false);
                 itemBinding.setItem(item);
                 itemBinding.setController(OverviewActivity.this);
-
-                View itemView = itemBinding.getRoot();
-                itemView.setTag(itemBinding);
-                return itemView;
+                itemBinding.setItem(item);
+                return itemBinding.getRoot();
             }
         };
         this.toDoListView.setAdapter(this.toDoListViewAdapter);
@@ -136,7 +133,7 @@ public class OverviewActivity extends AppCompatActivity {
             }
         });
 
-        OverviewViewModelImpl overviewViewModel = new ViewModelProvider(this).get(OverviewViewModelImpl.class);
+        this.overviewViewModel = new ViewModelProvider(this).get(OverviewViewModelImpl.class);
 
         if (overviewViewModel.getToDoItem() == null){
             operationRunner.run(
@@ -200,12 +197,14 @@ public class OverviewActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.sortList){
-            this.currentComparator = CHECKED_AND_NAME_COMPARATOR;
+            overviewViewModel.switchSortMode();
             sortToDoItems();
+            showMessage("Sorting...");
             return true;
         }
         else if (item.getItemId() == R.id.deleteAllItemsLocally){
             showMessage("DELETE ALL ITEMS LOCALLY");
+            showMessage("Delete all...");
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -213,7 +212,7 @@ public class OverviewActivity extends AppCompatActivity {
     }
 
     public void sortToDoItems(){
-        this.listData.sort(this.currentComparator);
+        this.listData.sort(this.overviewViewModel.getCurrentSortMode());
         this.toDoListViewAdapter.notifyDataSetChanged();
     }
 
@@ -222,6 +221,7 @@ public class OverviewActivity extends AppCompatActivity {
                 () -> crudOperations.updateToDoItem(item),
                 updateditem -> {
                     this.sortToDoItems();
+                    showMessage("Checked change for: " + item.getName());
                 }
         );
     }

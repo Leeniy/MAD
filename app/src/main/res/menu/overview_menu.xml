@@ -10,4 +10,8 @@
         android:id="@+id/deleteAllItemsLocally"
         app:showAsAction="never"/>
 
+    <item android:title="RUN SYNC"
+        android:id="@+id/RunSync"
+        app:showAsAction="never"/>
+
 </menu>
