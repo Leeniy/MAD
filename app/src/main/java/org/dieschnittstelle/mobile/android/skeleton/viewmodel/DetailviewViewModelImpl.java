@@ -3,6 +3,7 @@ package org.dieschnittstelle.mobile.android.skeleton.viewmodel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import org.dieschnittstelle.mobile.android.skeleton.databinding.ActivityDetailviewBinding;
 import org.dieschnittstelle.mobile.android.skeleton.model.ToDoItem;
 
 public class DetailviewViewModelImpl extends ViewModel implements IDetailviewViewmodel{
@@ -10,7 +11,6 @@ public class DetailviewViewModelImpl extends ViewModel implements IDetailviewVie
     private ToDoItem item;
 
     private final MutableLiveData<Boolean> savedOcurred = new MutableLiveData<>();
-
     @Override
     public ToDoItem getItem() {
         return item;
@@ -34,4 +34,5 @@ public class DetailviewViewModelImpl extends ViewModel implements IDetailviewVie
     public void onItemDelete() {
 
     }
+
 }

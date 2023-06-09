@@ -179,6 +179,8 @@ public class OverviewActivity extends AppCompatActivity {
                     itemInList.setName(item.getName());
                     itemInList.setDescription(item.getDescription());
                     itemInList.setChecked(item.isChecked());
+                    itemInList.setFavourite(item.isFavourite());
+                    itemInList.setExpiry(item.getExpiry());
                     sortToDoItems();
                 }
         );

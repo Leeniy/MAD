@@ -1,7 +1,5 @@
 package org.dieschnittstelle.mobile.android.skeleton.model;
 
-import android.app.DatePickerDialog;
-
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -21,6 +19,8 @@ public class ToDoItem implements Serializable {
     @SerializedName("done")
     private boolean checked;
     private boolean favourite;
+
+    private String expiry;
 
     public ToDoItem() {
     }
@@ -52,6 +52,14 @@ public class ToDoItem implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getExpiry() {
+        return expiry;
+    }
+
+    public void setExpiry(String expiry) {
+        this.expiry = expiry;
     }
 
     public boolean isChecked() {
