@@ -20,7 +20,7 @@ public class ToDoItem implements Serializable {
     private boolean checked;
     private boolean favourite;
 
-    private String expiry;
+    private Long expiry;
 
     public ToDoItem() {
     }
@@ -54,11 +54,11 @@ public class ToDoItem implements Serializable {
         this.description = description;
     }
 
-    public String getExpiry() {
+    public Long getExpiry() {
         return expiry;
     }
 
-    public void setExpiry(String expiry) {
+    public void setExpiry(Long expiry) {
         this.expiry = expiry;
     }
 

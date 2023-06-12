@@ -26,9 +26,9 @@ public class ToDoItemApplication extends Application {
 //                this.crudOperations = new RoomToDoItemCRUDOperationsImpl(this);
 //            }
 //        }
-//        catch (Exception e){
+//           catch (Exception e){
 //            throw new RuntimeException("Got exception trying to run future for checking connectivity");
-//        }
+//       }
 //    }
 
     public IToDoItemCRUDOperations getCRUDOperations(){

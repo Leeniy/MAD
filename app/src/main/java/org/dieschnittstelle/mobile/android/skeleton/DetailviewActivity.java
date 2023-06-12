@@ -1,5 +1,6 @@
 package org.dieschnittstelle.mobile.android.skeleton;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -21,7 +22,9 @@ import org.dieschnittstelle.mobile.android.skeleton.databinding.ActivityDetailvi
 import org.dieschnittstelle.mobile.android.skeleton.model.ToDoItem;
 import org.dieschnittstelle.mobile.android.skeleton.viewmodel.DetailviewViewModelImpl;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class DetailviewActivity extends AppCompatActivity {
 
@@ -38,7 +41,7 @@ public class DetailviewActivity extends AppCompatActivity {
     String time;
     String date;
 
-    String expiry;
+    Long expiry;
 
     public DetailviewActivity(){
         Log.i(DetailviewActivity.class.getSimpleName(), "consructor invoked");
@@ -73,47 +76,59 @@ public class DetailviewActivity extends AppCompatActivity {
 
         this.binding.setViewmodel(this.viewmodel);
 
-//        this.binding.btnDate.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                final Calendar calender = Calendar.getInstance();
-//                cyear = calender.get(Calendar.YEAR);
-//                cmonth = calender.get(Calendar.MONTH);
-//                cday = calender.get(Calendar.DAY_OF_MONTH);
-//
-//                DatePickerDialog datePickerDialog =
-//                        new DatePickerDialog(DetailviewActivity.this, new DatePickerDialog.OnDateSetListener() {
-//                            @Override
-//                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-//                                binding.showDate.setText(dayOfMonth+"."+(month+1)+"."+year);
-//                            }
-//                        }, cyear, cmonth, cday);
-//                datePickerDialog.getDatePicker().setMinDate(calender.getTimeInMillis()-1000);
-//                datePickerDialog.show();
-//                date = String.valueOf(cday+cmonth+cyear);
-//            }
-//        });
-//
-//        this.binding.btnTime.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                final Calendar calendar = Calendar.getInstance();
-//                chour = calendar.get(Calendar.HOUR);
-//                cminutes = calendar.get(Calendar.MINUTE);
-//                TimePickerDialog timePickerDialog =
-//                        new TimePickerDialog(DetailviewActivity.this, new TimePickerDialog.OnTimeSetListener() {
-//                            @Override
-//                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-//                                binding.showTime.setText(hourOfDay+":"+minute);
-//                            }
-//                        }, chour, cminutes, true);
-//                timePickerDialog.show();
-//                time = String.valueOf(chour+cminutes);
-//            }
-//        });
-//
-//        expiry = date + time;
-//        this.viewmodel.getItem().setExpiry(expiry);
+        this.expiry = this.viewmodel.getItem().getExpiry();
+
+        long dv = expiry*1000;
+        Date df = new java.util.Date(dv);
+        @SuppressLint("SimpleDateFormat") String vv = new SimpleDateFormat("dd.MM.yyyy hh:mm a").format(df);
+
+        date = vv.substring(0,10);
+        binding.showDate.setText(date);
+        time = vv.substring(12,17);
+        binding.showTime.setText(time);
+        Log.i(DetailviewActivity.class.getSimpleName(), "item date " + getDate() + " " + getTime());
+
+        this.binding.btnDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar calender = Calendar.getInstance();
+                cyear = calender.get(Calendar.YEAR);
+                cmonth = calender.get(Calendar.MONTH);
+                cday = calender.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog =
+                        new DatePickerDialog(DetailviewActivity.this, new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                Log.i(DetailviewActivity.class.getSimpleName(), "item date " + getDate() + " " + getTime());
+                                binding.showDate.setText(date);
+                            }
+                        }, cyear, cmonth, cday);
+                datePickerDialog.getDatePicker().setMinDate(calender.getTimeInMillis()-1000);
+                datePickerDialog.show();
+                date = cday + "." + (cmonth+1) + "." + cyear;
+
+            }
+        });
+
+        this.binding.btnTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar calendar = Calendar.getInstance();
+                chour = calendar.get(Calendar.HOUR);
+                cminutes = calendar.get(Calendar.MINUTE);
+                TimePickerDialog timePickerDialog =
+                        new TimePickerDialog(DetailviewActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                Log.i(DetailviewActivity.class.getSimpleName(), "item date " + getDate() + " " + getTime());
+                                binding.showTime.setText(time);
+                            }
+                        }, chour, cminutes, true);
+                timePickerDialog.show();
+                time = chour+":"+cminutes;
+            }
+        });
     }
 
     @Override
@@ -132,4 +147,19 @@ public class DetailviewActivity extends AppCompatActivity {
 
     }
 
+    public String getDate(){
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
 }

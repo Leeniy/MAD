@@ -6,6 +6,10 @@
             name="viewmodel"
             type="org.dieschnittstelle.mobile.android.skeleton.viewmodel.IDetailviewViewmodel" />
 
+        <variable
+            name="timedate"
+            type="org.dieschnittstelle.mobile.android.skeleton.DetailviewActivity" />
+
     </data>
 
 <androidx.constraintlayout.widget.ConstraintLayout
@@ -95,8 +99,7 @@
             android:id="@+id/showDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:datePickerMode="calendar"
-            android:text="@={viewmodel.item.expiry}"/>
+            android:datePickerMode="calendar"/>
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -106,8 +109,7 @@
             android:id="@+id/showTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:datePickerMode="calendar"
-            android:text="time"/>
+            android:datePickerMode="calendar" />
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
