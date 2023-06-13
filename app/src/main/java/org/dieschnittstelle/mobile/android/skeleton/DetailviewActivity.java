@@ -22,6 +22,8 @@ import org.dieschnittstelle.mobile.android.skeleton.databinding.ActivityDetailvi
 import org.dieschnittstelle.mobile.android.skeleton.model.ToDoItem;
 import org.dieschnittstelle.mobile.android.skeleton.viewmodel.DetailviewViewModelImpl;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -40,6 +42,9 @@ public class DetailviewActivity extends AppCompatActivity {
     int cyear, cmonth, cday, chour, cminutes;
     String time;
     String date;
+
+    String vv;
+    Date df;
 
     Long expiry;
 
@@ -78,19 +83,24 @@ public class DetailviewActivity extends AppCompatActivity {
 
         this.expiry = this.viewmodel.getItem().getExpiry();
 
-        long dv = expiry*1000;
-        Date df = new java.util.Date(dv);
-        @SuppressLint("SimpleDateFormat") String vv = new SimpleDateFormat("dd.MM.yyyy hh:mm a").format(df);
+        if (expiry != null){
+            df = new java.util.Date((long)expiry);
+        } else {
+            expiry = System.currentTimeMillis();
+            df = new java.util.Date((long)expiry);
+        }
+
+        vv = new SimpleDateFormat("dd.MM.yyyy hh:mm").format(df);
 
         date = vv.substring(0,10);
         binding.showDate.setText(date);
-        time = vv.substring(12,17);
+        time = vv.substring(11,16);
         binding.showTime.setText(time);
-        Log.i(DetailviewActivity.class.getSimpleName(), "item date " + getDate() + " " + getTime());
 
         this.binding.btnDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 final Calendar calender = Calendar.getInstance();
                 cyear = calender.get(Calendar.YEAR);
                 cmonth = calender.get(Calendar.MONTH);
@@ -100,14 +110,13 @@ public class DetailviewActivity extends AppCompatActivity {
                         new DatePickerDialog(DetailviewActivity.this, new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                Log.i(DetailviewActivity.class.getSimpleName(), "item date " + getDate() + " " + getTime());
+                                date = String.format("%02d.%02d.%04d", dayOfMonth, (month + 1), year);
                                 binding.showDate.setText(date);
+                                setNewDateTime();
                             }
                         }, cyear, cmonth, cday);
                 datePickerDialog.getDatePicker().setMinDate(calender.getTimeInMillis()-1000);
                 datePickerDialog.show();
-                date = cday + "." + (cmonth+1) + "." + cyear;
-
             }
         });
 
@@ -121,12 +130,14 @@ public class DetailviewActivity extends AppCompatActivity {
                         new TimePickerDialog(DetailviewActivity.this, new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                Log.i(DetailviewActivity.class.getSimpleName(), "item date " + getDate() + " " + getTime());
+                                time = String.format("%02d:%02d", hourOfDay, minute);
                                 binding.showTime.setText(time);
+                                setNewDateTime();
                             }
                         }, chour, cminutes, true);
                 timePickerDialog.show();
-                time = chour+":"+cminutes;
+                calendar.set(Calendar.HOUR, chour);
+                calendar.set(Calendar.MINUTE, cminutes);
             }
         });
     }
@@ -140,6 +151,7 @@ public class DetailviewActivity extends AppCompatActivity {
         Intent returnIntent = new Intent();
         returnIntent.putExtra(ARG_ITEM, this.viewmodel.getItem());
         setResult(this.viewmodel.getItem().getId() == 0L ? ITEM_CREATED : ITEM_EDITED, returnIntent);
+        setNewDateTime();
         finish();
     }
 
@@ -147,19 +159,16 @@ public class DetailviewActivity extends AppCompatActivity {
 
     }
 
-    public String getDate(){
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
+    public void setNewDateTime(){
+        vv = date + " " +time;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy hh:mm");
+        try {
+            df = simpleDateFormat.parse(vv);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        Log.i(DetailviewActivity.class.getSimpleName(), "date check " + df);
+        expiry = df.getTime();
+        viewmodel.getItem().setExpiry(expiry);
     }
 }
