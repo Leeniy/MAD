@@ -74,4 +74,9 @@ public class RoomToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperations {
         db.getDao().delete(readToDoItem(id));
         return true;
     }
+
+    @Override
+    public boolean login(User user) {
+        return false;
+    }
 }

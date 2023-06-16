@@ -21,7 +21,7 @@ public class ToDoItemApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-/*        try {
+        try {
             if (checkConnectivity().get()) {
                 this.crudOperations = new RetrofitToDoItemCRUDOperationsImpl();
             } else {
@@ -33,7 +33,7 @@ public class ToDoItemApplication extends Application {
            catch (Exception e){
             this.crudOperations = new RoomToDoItemCRUDOperationsImpl(this);
             this.offLineMode = true;
-       }*/
+       }
     }
 
     public IToDoItemCRUDOperations getCRUDOperations(){

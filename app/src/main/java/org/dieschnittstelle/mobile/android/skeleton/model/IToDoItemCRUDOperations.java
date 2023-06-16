@@ -14,4 +14,6 @@ public interface IToDoItemCRUDOperations {
 
     public boolean deleteToDoItem(long id);
 
+    public boolean login(User user);
+
 }
