@@ -11,8 +11,10 @@ public class OverviewViewModelImpl extends ViewModel implements IOverviewViewMod
 
     public static final Comparator<ToDoItem> DONE = Comparator.comparing(ToDoItem::isChecked);
     public static final Comparator<ToDoItem> FAVOURITE = Comparator.comparing(ToDoItem::isFavourite);
+
+    public static final Comparator<ToDoItem> DATE_TIME = Comparator.comparing(ToDoItem::getExpiry);
     public static final Comparator<ToDoItem> FAVOURITE_AND_DONE_AND_DATE_COMPARATOR = DONE.thenComparing(FAVOURITE.reversed());
-    public static final Comparator<ToDoItem> CHECKED_AND_NAME_COMPARATOR = Comparator.comparing(ToDoItem::isChecked).thenComparing(ToDoItem::getName);
+    public static final Comparator<ToDoItem> CHECKED_AND_NAME_COMPARATOR = Comparator.comparing(ToDoItem::isChecked).thenComparing(ToDoItem::getName).thenComparing(DATE_TIME.reversed());
     private Comparator<ToDoItem> currentComparator = FAVOURITE_AND_DONE_AND_DATE_COMPARATOR;
     private List<ToDoItem> items;
     private ToDoItem item;

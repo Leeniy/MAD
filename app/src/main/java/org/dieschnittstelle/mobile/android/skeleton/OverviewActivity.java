@@ -86,6 +86,11 @@ public class OverviewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        if (((ToDoItemApplication) getApplication()).isOffLineMode()){
+            startActivity(new Intent(this, DetailviewActivity.class));
+        }
+
         setContentView(R.layout.activity_overview);
 
         this.crudOperations = ((ToDoItemApplication) getApplication()).getCRUDOperations();
@@ -165,7 +170,10 @@ public class OverviewActivity extends AppCompatActivity {
     public void onNewToDoItemReceived(ToDoItem item) {
         operationRunner.run(
                 () -> this.crudOperations.createToDoItem(item),
-                createdToDoItem -> this.toDoListViewAdapter.add(createdToDoItem)
+                createdToDoItem -> {
+                    this.toDoListViewAdapter.add(createdToDoItem);
+                    sortToDoItems();
+                }
         );
     }
 

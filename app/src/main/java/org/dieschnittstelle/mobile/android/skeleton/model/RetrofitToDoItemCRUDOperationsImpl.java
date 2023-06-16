@@ -93,9 +93,9 @@ public class RetrofitToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperatio
     }
 
     @Override
-    public boolean deleteToDoItem(ToDoItem item) {
+    public boolean deleteToDoItem(long id) {
         try {
-            this.toDoItemResource.delete(item.getId()).execute().body();
+            this.toDoItemResource.delete(id).execute().body();
             return true;
         } catch (Exception e) {
             throw new RuntimeException(e);

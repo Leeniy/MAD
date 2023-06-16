@@ -2,6 +2,7 @@ package org.dieschnittstelle.mobile.android.skeleton.model;
 
 import android.content.Context;
 
+import androidx.room.AutoMigration;
 import androidx.room.Dao;
 import androidx.room.Database;
 import androidx.room.Delete;
@@ -36,7 +37,6 @@ public class RoomToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperations {
 
     @Database(entities = {ToDoItem.class}, version = 1)
     public static abstract class ToDoItemDatabase extends RoomDatabase {
-
         public abstract ToDoItemDao getDao();
     }
 
@@ -70,8 +70,8 @@ public class RoomToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperations {
     }
 
     @Override
-    public boolean deleteToDoItem(ToDoItem item) {
-        db.getDao().delete(readToDoItem(item.getId()));
+    public boolean deleteToDoItem(long id) {
+        db.getDao().delete(readToDoItem(id));
         return true;
     }
 }

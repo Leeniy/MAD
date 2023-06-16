@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:icon="@drawable/delete">
     <data>
         <variable
             name="viewmodel"
@@ -28,6 +29,9 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/ToDoName"
             android:text="@={viewmodel.item.name}"
+            android:error="@{viewmodel.errorStatus}"
+            android:onEditorAction="@{(view, actionId, event) -> viewmodel.checkFieldInputCompleted(actionId)}"
+            android:onTextChanged="@{(a, s, b, c) -> viewmodel.onNameFieldInputChanged()}"
             android:singleLine="true"
             android:imeOptions="actionNext"
             android:layout_width="match_parent"
@@ -131,7 +135,6 @@
         android:id="@+id/fabDelete"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_delete"
         android:layout_margin="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

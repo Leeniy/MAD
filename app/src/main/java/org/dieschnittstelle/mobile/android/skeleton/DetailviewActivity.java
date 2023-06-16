@@ -59,6 +59,7 @@ public class DetailviewActivity extends AppCompatActivity {
         Log.i(DetailviewActivity.class.getSimpleName(), "onCreate invoked");
 
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_detailview);
+        this.binding.setLifecycleOwner(this);
 
         this.viewmodel = new ViewModelProvider(this).get(DetailviewViewModelImpl.class);
 
@@ -155,10 +156,6 @@ public class DetailviewActivity extends AppCompatActivity {
         finish();
     }
 
-    public void onItemDelete(){
-
-    }
-
     public void setNewDateTime(){
         vv = date + " " +time;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy hh:mm");
@@ -170,5 +167,9 @@ public class DetailviewActivity extends AppCompatActivity {
         Log.i(DetailviewActivity.class.getSimpleName(), "date check " + df);
         expiry = df.getTime();
         viewmodel.getItem().setExpiry(expiry);
+    }
+
+    public void onBackPressed(){
+//        super.onBackPressed();
     }
 }
