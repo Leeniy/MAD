@@ -10,6 +10,10 @@
             name="timedate"
             type="org.dieschnittstelle.mobile.android.skeleton.DetailviewActivity" />
 
+        <variable
+            name="item"
+            type="org.dieschnittstelle.mobile.android.skeleton.model.IToDoItemCRUDOperations" />
+
     </data>
 
 <androidx.constraintlayout.widget.ConstraintLayout
@@ -137,7 +141,7 @@
         android:layout_margin="16dp"
         app:srcCompat="@drawable/delete"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

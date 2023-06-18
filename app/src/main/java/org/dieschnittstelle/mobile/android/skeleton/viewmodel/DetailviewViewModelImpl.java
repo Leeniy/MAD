@@ -54,6 +54,7 @@ public class DetailviewViewModelImpl extends ViewModel implements IDetailviewVie
 
     @Override
     public void onDeleteItem() {
+
     }
 
     public void setItem(ToDoItem item) {

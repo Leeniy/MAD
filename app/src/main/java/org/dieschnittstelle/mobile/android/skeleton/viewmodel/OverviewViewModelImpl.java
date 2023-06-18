@@ -11,11 +11,11 @@ public class OverviewViewModelImpl extends ViewModel implements IOverviewViewMod
 
     public static final Comparator<ToDoItem> DONE = Comparator.comparing(ToDoItem::isChecked);
     public static final Comparator<ToDoItem> FAVOURITE = Comparator.comparing(ToDoItem::isFavourite);
-
     public static final Comparator<ToDoItem> DATE_TIME = Comparator.comparing(ToDoItem::getExpiry);
-    public static final Comparator<ToDoItem> FAVOURITE_AND_DONE_AND_DATE_COMPARATOR = DONE.thenComparing(FAVOURITE.reversed());
-    public static final Comparator<ToDoItem> CHECKED_AND_NAME_COMPARATOR = Comparator.comparing(ToDoItem::isChecked).thenComparing(ToDoItem::getName).thenComparing(DATE_TIME.reversed());
-    private Comparator<ToDoItem> currentComparator = FAVOURITE_AND_DONE_AND_DATE_COMPARATOR;
+    public static final Comparator<ToDoItem> DONE_AND_FAVOURITE_DATE_COMPARATOR = DONE.thenComparing(FAVOURITE.reversed()).thenComparing(DATE_TIME);
+    public static final Comparator<ToDoItem> DONE_AND_DATE_AND_FAVOURITE_COMPARATOR = DONE.thenComparing(DATE_TIME).thenComparing(FAVOURITE.reversed());
+    private Comparator<ToDoItem> currentComparator = DONE_AND_FAVOURITE_DATE_COMPARATOR;
+    private String comparator = "DFDT";
     private List<ToDoItem> items;
     private ToDoItem item;
 
@@ -38,7 +38,14 @@ public class OverviewViewModelImpl extends ViewModel implements IOverviewViewMod
 
     @Override
     public void switchSortMode() {
-        this.currentComparator = CHECKED_AND_NAME_COMPARATOR;
+        if(this.comparator == "DFDT") {
+            this.currentComparator = DONE_AND_DATE_AND_FAVOURITE_COMPARATOR;
+            this.comparator = "DDTF";
+        } else {
+            this.currentComparator = DONE_AND_FAVOURITE_DATE_COMPARATOR;
+            this.comparator = "DFDT";
+        }
+
     }
 
 }
