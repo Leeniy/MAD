@@ -15,6 +15,7 @@ public class DetailviewViewModelImpl extends ViewModel implements IDetailviewVie
     private MutableLiveData<String> errorStatus = new MutableLiveData<>();
 
     private final MutableLiveData<Boolean> savedOcurred = new MutableLiveData<>();
+
     @Override
     public ToDoItem getItem() {
         return item;

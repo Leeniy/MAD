@@ -3,6 +3,7 @@ package org.dieschnittstelle.mobile.android.skeleton;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -88,7 +89,7 @@ public class OverviewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         if (((ToDoItemApplication) getApplication()).isOffLineMode()){
-            startActivity(new Intent(this, DetailviewActivity.class));
+            startActivity(new Intent(this, OverviewActivity.class));
         }
 
         setContentView(R.layout.activity_overview);
@@ -122,13 +123,19 @@ public class OverviewActivity extends AppCompatActivity {
                     itemBinding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.activity_overview_listitem, null, false);
                     itemBinding.getRoot().setTag(itemBinding);
                 }
+
                 ToDoItem item = super.getItem(position);
                 itemBinding.setItem(item);
                 itemBinding.setController(OverviewActivity.this);
                 itemBinding.setItem(item);
+
+                /*if (item.getExpiry() < System.currentTimeMillis()){
+                    findViewById(R.id.todoName).setBackgroundColor(Color.BLUE);
+                }*/
                 return itemBinding.getRoot();
             }
         };
+
         this.toDoListView.setAdapter(this.toDoListViewAdapter);
         this.toDoListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

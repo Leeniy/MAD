@@ -31,10 +31,13 @@ public class RetrofitToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperatio
         public Call<ToDoItem> update(@Path("todoId") long id, @Body ToDoItem item);
 
         @DELETE("/api/todos/{todoId}")
-        public Call<Void> delete(@Path("todoId") long id);
+        public Call<Boolean> delete(@Path("todoId") long id);
+
+        @DELETE("/api/todos")
+        public Call<Boolean> deleteAllTodos();
 
         @PUT ("/api/users/auth")
-        public Call<Void> login(@Body User user);
+        public Call<Boolean> login(@Body User user);
 
     }
 
@@ -86,10 +89,10 @@ public class RetrofitToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperatio
     }
 
     @Override
-    public boolean updateToDoItem(ToDoItem item) {
+    public ToDoItem updateToDoItem(ToDoItem item) {
         try {
             this.toDoItemResource.update(item.getId(), item).execute().body();
-            return true;
+            return item;
         }
         catch (Exception e){
             throw new RuntimeException(e);
@@ -102,6 +105,20 @@ public class RetrofitToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperatio
             this.toDoItemResource.delete(id).execute().body();
             return true;
 
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean deleteAllTodoItems(boolean remote) {
+        return false;
+    }
+
+    public boolean deleteAllTodos(){
+        try {
+            this.toDoItemResource.deleteAllTodos().execute().body();
+            return true;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

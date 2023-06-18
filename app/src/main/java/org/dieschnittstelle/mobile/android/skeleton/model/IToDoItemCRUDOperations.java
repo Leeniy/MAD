@@ -10,10 +10,12 @@ public interface IToDoItemCRUDOperations {
 
     public ToDoItem readToDoItem(long id);
 
-    public boolean updateToDoItem(ToDoItem item);
+    public ToDoItem updateToDoItem(ToDoItem item);
 
     public boolean deleteToDoItem(long id);
 
-    public boolean login(User user);
+    public boolean deleteAllTodoItems(boolean remote);
+
+     public boolean login(User user);
 
 }

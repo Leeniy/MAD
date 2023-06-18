@@ -6,6 +6,7 @@ import android.widget.Toast;
 import org.dieschnittstelle.mobile.android.skeleton.model.IToDoItemCRUDOperations;
 import org.dieschnittstelle.mobile.android.skeleton.model.RetrofitToDoItemCRUDOperationsImpl;
 import org.dieschnittstelle.mobile.android.skeleton.model.RoomToDoItemCRUDOperationsImpl;
+import org.dieschnittstelle.mobile.android.skeleton.model.SyncedToDoItemCRUDOperationsImpl;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -23,7 +24,11 @@ public class ToDoItemApplication extends Application {
         super.onCreate();
         try {
             if (checkConnectivity().get()) {
-                this.crudOperations = new RetrofitToDoItemCRUDOperationsImpl();
+                Toast.makeText(this, "Backend accessible, will use remote access.", Toast.LENGTH_LONG);
+                this.crudOperations = /*new SyncedToDoItemCRUDOperationsImpl(
+                        new RoomToDoItemCRUDOperationsImpl(this),
+                        new RetrofitToDoItemCRUDOperationsImpl());*/
+                new  RetrofitToDoItemCRUDOperationsImpl();
             } else {
                 this.crudOperations = new RoomToDoItemCRUDOperationsImpl(this);
                 this.offLineMode = true;

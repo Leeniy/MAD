@@ -1,16 +1,25 @@
 package org.dieschnittstelle.mobile.android.skeleton;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.DataBindingUtil;
@@ -19,6 +28,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import org.checkerframework.checker.units.qual.C;
 import org.dieschnittstelle.mobile.android.skeleton.databinding.ActivityDetailviewBinding;
+import org.dieschnittstelle.mobile.android.skeleton.model.IToDoItemCRUDOperations;
 import org.dieschnittstelle.mobile.android.skeleton.model.ToDoItem;
 import org.dieschnittstelle.mobile.android.skeleton.viewmodel.DetailviewViewModelImpl;
 
@@ -27,6 +37,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.logging.Logger;
 
 public class DetailviewActivity extends AppCompatActivity {
 
@@ -38,6 +49,10 @@ public class DetailviewActivity extends AppCompatActivity {
     private ActivityDetailviewBinding binding;
 
     private DetailviewViewModelImpl viewmodel;
+
+    private ActivityResultLauncher<Intent> selectedContactLuncher;
+
+    IToDoItemCRUDOperations crudOperations;
 
     int cyear, cmonth, cday, chour, cminutes;
     String time;
@@ -59,7 +74,18 @@ public class DetailviewActivity extends AppCompatActivity {
         Log.i(DetailviewActivity.class.getSimpleName(), "onCreate invoked");
 
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_detailview);
+
+        this.selectedContactLuncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK){
+                        onContactSelected(result.getData());
+                    }
+                });
+
         this.binding.setLifecycleOwner(this);
+
+        this.crudOperations = ((ToDoItemApplication) getApplication()).getCRUDOperations();;
 
         this.viewmodel = new ViewModelProvider(this).get(DetailviewViewModelImpl.class);
 
@@ -141,7 +167,37 @@ public class DetailviewActivity extends AppCompatActivity {
                 calendar.set(Calendar.MINUTE, cminutes);
             }
         });
+
+        this.binding.fabDelete.setOnClickListener(view -> {
+            showAlertDialog();
+        });
     }
+
+    private void showAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("DELETE");
+        builder.setMessage("Are you sure?");
+
+        // add the buttons
+        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                crudOperations.deleteToDoItem(viewmodel.getItem().getId());
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        // create and show the alert dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
 
     @Override
     protected void onPause() {
@@ -169,7 +225,33 @@ public class DetailviewActivity extends AppCompatActivity {
         viewmodel.getItem().setExpiry(expiry);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.detailview_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.selectContact) {
+            selectContect();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void selectContect() {
+        Intent selectContactIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+        this.selectedContactLuncher.launch(selectContactIntent);
+    }
+
+    private void onContactSelected(Intent resultData) {
+
+    }
+
     public void onBackPressed(){
 //        super.onBackPressed();
     }
+
 }

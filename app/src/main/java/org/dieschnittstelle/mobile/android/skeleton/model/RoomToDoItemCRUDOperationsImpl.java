@@ -64,15 +64,20 @@ public class RoomToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperations {
     }
 
     @Override
-    public boolean updateToDoItem(ToDoItem item) {
+    public ToDoItem updateToDoItem(ToDoItem item) {
         db.getDao().update(item);
-        return true;
+        return item;
     }
 
     @Override
     public boolean deleteToDoItem(long id) {
         db.getDao().delete(readToDoItem(id));
         return true;
+    }
+
+    @Override
+    public boolean deleteAllTodoItems(boolean remote) {
+        return false;
     }
 
     @Override

@@ -8,19 +8,16 @@
             type="org.dieschnittstelle.mobile.android.skeleton.model.User" />
         <variable
             name="viemodel"
-            type="org.dieschnittstelle.mobile.android.skeleton.viewmodel.ILoginViewmodel" />
-
+            type="org.dieschnittstelle.mobile.android.skeleton.LoginActivity" />
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".LoginActivity">
+    android:layout_height="match_parent">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/emailWrapper"
-        android:layout_width="350dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Email"
         android:orientation="vertical"
@@ -29,19 +26,18 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/login_email"
             android:error="@{viemodel.errorStatus}"
-            android:text="@={viemodel.user.mail}"
-            android:layout_width="350dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:onEditorAction="@{(view, actionId, event) -> viemodel.checkFieldInputCompleted(actionId)}"
             android:onTextChanged="@{(a, s, b, c) -> viemodel.onNameFieldInputChanged()}"
-            android:hint="Email"
-            android:padding="8dp"
-            android:singleLine="true"/>
+            android:imeOptions="actionNext"
+            android:singleLine="true">
+        </com.google.android.material.textfield.TextInputEditText>
         </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/pwWrapper"
-        android:layout_width="350dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Passwort"
         android:orientation="vertical"
@@ -50,13 +46,16 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/login_pw"
-            android:layout_width="350dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="Passwort"
-            android:text="@={viemodel.user.pw}"
             android:inputType="numberPassword"
             android:padding="8dp"
-            android:singleLine="true" />
+            android:imeOptions="actionNext"
+            android:singleLine="true"
+            android:error="@{viemodel.errorStatusPW}"
+            android:onEditorAction="@{(view, actionId, event) -> viemodel.checkPWFieldInputCompleted(actionId)}"
+            android:onTextChanged="@{(a, s, b, c) -> viemodel.onPWFieldInputChanged()}">
+        </com.google.android.material.textfield.TextInputEditText>
 
         <Button
             android:layout_width="match_parent"
