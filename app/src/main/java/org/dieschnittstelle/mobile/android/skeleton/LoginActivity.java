@@ -3,11 +3,15 @@ package org.dieschnittstelle.mobile.android.skeleton;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.room.PrimaryKey;
 
 import org.dieschnittstelle.mobile.android.skeleton.databinding.ActivityLoginBinding;
@@ -15,14 +19,20 @@ import org.dieschnittstelle.mobile.android.skeleton.model.IToDoItemCRUDOperation
 import org.dieschnittstelle.mobile.android.skeleton.model.ToDoItem;
 import org.dieschnittstelle.mobile.android.skeleton.model.User;
 import org.dieschnittstelle.mobile.android.skeleton.util.MADAsyncOperationRunner;
+import org.dieschnittstelle.mobile.android.skeleton.viewmodel.LoginViewModelImpl;
 
 public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
-    private String mail;
-    private String pw;
+
+    private MutableLiveData<String> errorStatus = new MutableLiveData<>();
 
     private User user = new User();
+
+    private LoginViewModelImpl viewModel;
+
+    String mailT;
+    String pwT;
 
     private boolean status;
 
@@ -32,25 +42,25 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
-        this.crudOperations = ((ToDoItemApplication) getApplication()).getCRUDOperations();
-
+        this.viewModel = new ViewModelProvider(this).get(LoginViewModelImpl.class);
 
         this.binding.loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mail = String.valueOf(binding.loginEmail.getText());
-                pw = String.valueOf(binding.loginPw.getText());
-                user = new User(mail, pw);
-                Log.i(OverviewActivity.class.getSimpleName(), "mail: " + mail + " pw: " + pw);
-
-                status = crudOperations.login(user);
-
-                if (status){
-                    setContentView(R.layout.activity_overview);
-                } else {
-                    setContentView(R.layout.activity_login);
+                try {
+                    Log.i(OverviewActivity.class.getSimpleName(), "mail: " + mailT + " pw: " + pwT);
+                    if (viewModel.getUser().getMail() == "s@bht.de" || viewModel.getUser().getPw() == "000000"){
+                        setContentView(R.layout.activity_overview);
+                    } else {
+                        setContentView(R.layout.activity_login);
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
+
             }
         });
+
     }
+
 }

@@ -6,6 +6,10 @@
         <variable
             name="daten"
             type="org.dieschnittstelle.mobile.android.skeleton.model.User" />
+        <variable
+            name="viemodel"
+            type="org.dieschnittstelle.mobile.android.skeleton.viewmodel.ILoginViewmodel" />
+
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:tools="http://schemas.android.com/tools"
@@ -24,8 +28,12 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/login_email"
+            android:error="@{viemodel.errorStatus}"
+            android:text="@={viemodel.user.mail}"
             android:layout_width="350dp"
             android:layout_height="match_parent"
+            android:onEditorAction="@{(view, actionId, event) -> viemodel.checkFieldInputCompleted(actionId)}"
+            android:onTextChanged="@{(a, s, b, c) -> viemodel.onNameFieldInputChanged()}"
             android:hint="Email"
             android:padding="8dp"
             android:singleLine="true"/>
@@ -45,8 +53,10 @@
             android:layout_width="350dp"
             android:layout_height="match_parent"
             android:hint="Passwort"
+            android:text="@={viemodel.user.pw}"
+            android:inputType="numberPassword"
             android:padding="8dp"
-            android:singleLine="true"/>
+            android:singleLine="true" />
 
         <Button
             android:layout_width="match_parent"
@@ -54,16 +64,5 @@
             android:text="Sign in"
             android:id="@+id/login_button"/>
         </com.google.android.material.textfield.TextInputLayout>
-
-    <ProgressBar
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

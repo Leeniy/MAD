@@ -31,5 +31,13 @@ public class User implements Serializable {
     public void setPw(String pw) {
         this.pw = pw;
     }
+
+    public String getMail() {
+        return mail;
+    }
+
+    public String getPw() {
+        return pw;
+    }
 }
 
