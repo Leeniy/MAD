@@ -85,7 +85,7 @@ public class DetailviewActivity extends AppCompatActivity {
 
         this.binding.setLifecycleOwner(this);
 
-        this.crudOperations = ((ToDoItemApplication) getApplication()).getCRUDOperations();;
+        this.crudOperations = ((ToDoItemApplication) getApplication()).getCRUDOperations();
 
         this.viewmodel = new ViewModelProvider(this).get(DetailviewViewModelImpl.class);
 
@@ -248,10 +248,6 @@ public class DetailviewActivity extends AppCompatActivity {
 
     private void onContactSelected(Intent resultData) {
 
-    }
-
-    public void onBackPressed(){
-//        super.onBackPressed();
     }
 
 }

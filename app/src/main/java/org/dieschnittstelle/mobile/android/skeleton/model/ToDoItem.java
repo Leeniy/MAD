@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -15,12 +16,13 @@ public class ToDoItem implements Serializable {
     private long id;
     private String name;
     private String description;
-
+    private Long expiry;
+    //private List<String> contactId;
     @SerializedName("done")
     private boolean checked;
     private boolean favourite;
 
-    private Long expiry;
+
 
     public ToDoItem() {
     }
@@ -77,6 +79,14 @@ public class ToDoItem implements Serializable {
     public void setFavourite(boolean favourite) {
         this.favourite = favourite;
     }
+
+    /*public List<String> getContactId() {
+        return contactId;
+    }
+
+    public void setContactId(List<String> contactId) {
+        this.contactId = contactId;
+    }*/
 
     @Override
     public boolean equals(Object o) {

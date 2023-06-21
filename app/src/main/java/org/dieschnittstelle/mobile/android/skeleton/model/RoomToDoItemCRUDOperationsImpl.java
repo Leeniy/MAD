@@ -81,4 +81,8 @@ public class RoomToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperations {
         return false;
     }
 
+    public boolean login(User user) {
+        return false;
+    }
+
 }

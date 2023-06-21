@@ -12,7 +12,7 @@ public class DetailviewViewModelImpl extends ViewModel implements IDetailviewVie
 
     private ToDoItem item;
 
-    private MutableLiveData<String> errorStatus = new MutableLiveData<>();
+    private final MutableLiveData<String> errorStatus = new MutableLiveData<>();
 
     private final MutableLiveData<Boolean> savedOcurred = new MutableLiveData<>();
 

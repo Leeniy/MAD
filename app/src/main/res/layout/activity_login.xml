@@ -17,6 +17,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ProgressBar
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/emailWrapper"
         android:layout_width="match_parent"
@@ -27,8 +38,8 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/login_email"
-            android:text="@={item.mail}"
             android:error="@{viemodel.errorStatus}"
+            android:text="@={viemodel.mail}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:onEditorAction="@{(view, actionId, event) -> viemodel.checkFieldInputCompleted(actionId)}"
@@ -55,9 +66,9 @@
             android:padding="8dp"
             android:imeOptions="actionNext"
             android:singleLine="true"
-            android:text="@={item.pw}"
             android:error="@{viemodel.errorStatusPW}"
-            android:onEditorAction="@{(view, actionId, event) -> viemodel.checkPWFieldInputCompleted(actionId)}"
+            android:text="@={viemodel.pw}"
+            android:onEditorAction="@{(view, actionId, event) -> viemodel.checkFieldInputCompleted(actionId)}"
             android:onTextChanged="@{(a, s, b, c) -> viemodel.onPWFieldInputChanged()}">
         </com.google.android.material.textfield.TextInputEditText>
 

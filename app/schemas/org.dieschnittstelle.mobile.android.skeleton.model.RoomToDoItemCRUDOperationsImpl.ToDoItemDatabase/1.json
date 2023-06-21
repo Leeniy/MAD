@@ -6,7 +6,7 @@
     "entities": [
       {
         "tableName": "ToDoItem",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `description` TEXT, `checked` INTEGER NOT NULL, `favourite` INTEGER NOT NULL, `expiry` INTEGER)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `description` TEXT, `expiry` INTEGER, `checked` INTEGER NOT NULL, `favourite` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -27,6 +27,12 @@
             "notNull": false
           },
           {
+            "fieldPath": "expiry",
+            "columnName": "expiry",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
             "fieldPath": "checked",
             "columnName": "checked",
             "affinity": "INTEGER",
@@ -37,12 +43,6 @@
             "columnName": "favourite",
             "affinity": "INTEGER",
             "notNull": true
-          },
-          {
-            "fieldPath": "expiry",
-            "columnName": "expiry",
-            "affinity": "INTEGER",
-            "notNull": false
           }
         ],
         "primaryKey": {

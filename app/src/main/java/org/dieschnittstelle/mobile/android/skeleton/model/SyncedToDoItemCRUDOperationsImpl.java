@@ -55,7 +55,6 @@ public class SyncedToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperations
         }
     }
 
-    @Override
     public boolean login(User user) {
         return false;
     }

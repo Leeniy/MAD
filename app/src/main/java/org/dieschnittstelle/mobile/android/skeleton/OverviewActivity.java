@@ -93,6 +93,7 @@ public class OverviewActivity extends AppCompatActivity {
         }
 
         setContentView(R.layout.activity_overview);
+        this.overviewViewModel = new ViewModelProvider(this).get(OverviewViewModelImpl.class);
 
         this.crudOperations = ((ToDoItemApplication) getApplication()).getCRUDOperations();
 
@@ -145,7 +146,7 @@ public class OverviewActivity extends AppCompatActivity {
             }
         });
 
-        this.overviewViewModel = new ViewModelProvider(this).get(OverviewViewModelImpl.class);
+
 
         if (overviewViewModel.getToDoItem() == null){
             operationRunner.run(
@@ -196,7 +197,10 @@ public class OverviewActivity extends AppCompatActivity {
                     itemInList.setChecked(item.isChecked());
                     itemInList.setFavourite(item.isFavourite());
                     itemInList.setExpiry(item.getExpiry());
+                    //this.overviewViewModel.getToDoItem().remove(posOfToDoItemInList);
+                    //this.overviewViewModel.getToDoItem().add(item);
                     sortToDoItems();
+                    toDoListViewAdapter.notifyDataSetChanged();
                 }
         );
     }
