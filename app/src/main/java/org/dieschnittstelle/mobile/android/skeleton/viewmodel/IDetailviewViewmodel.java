@@ -20,6 +20,5 @@ public interface IDetailviewViewmodel {
 
     public MutableLiveData<String> getErrorStatus();
 
-    public void onDeleteItem();
 
 }

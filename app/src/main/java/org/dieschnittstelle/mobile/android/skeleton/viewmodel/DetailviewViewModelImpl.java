@@ -53,7 +53,6 @@ public class DetailviewViewModelImpl extends ViewModel implements IDetailviewVie
         return this.errorStatus;
     }
 
-    @Override
     public void onDeleteItem() {
 
     }

@@ -33,6 +33,7 @@ public class RoomToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperations {
 
         @Delete
         public void delete(ToDoItem item);
+
     }
 
     @Database(entities = {ToDoItem.class}, version = 1)
@@ -80,8 +81,4 @@ public class RoomToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperations {
         return false;
     }
 
-    @Override
-    public boolean login(User user) {
-        return false;
-    }
 }
