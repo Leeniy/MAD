@@ -49,6 +49,10 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (((ToDoItemApplication) getApplication()).isOffLineMode()){
+            startActivity(new Intent(this, OverviewActivity.class));
+        }
+
         this.binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.activity_login, null, false);
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
 

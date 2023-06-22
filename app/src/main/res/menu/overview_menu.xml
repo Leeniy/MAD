@@ -13,7 +13,7 @@
         app:showAsAction="never"/>
 
     <item android:title="RUN SYNC"
-        android:id="@+id/RunSync"
+        android:id="@+id/runSync"
         app:showAsAction="never"/>
 
 </menu>

@@ -87,9 +87,9 @@ public class OverviewActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
-        if (((ToDoItemApplication) getApplication()).isOffLineMode()){
-            startActivity(new Intent(this, OverviewActivity.class));
-        }
+        /*if (((ToDoItemApplication) getApplication()).isOffLineMode()){
+            startActivity(new Intent(this, DetailviewActivity.class));
+        }*/
 
         setContentView(R.layout.activity_overview);
         this.overviewViewModel = new ViewModelProvider(this).get(OverviewViewModelImpl.class);
@@ -100,7 +100,7 @@ public class OverviewActivity extends AppCompatActivity {
             initialViewmodel = true;
         }
 
-        this.crudOperations = ((ToDoItemApplication) getApplication()).getCRUDOperations();
+        crudOperations = ((ToDoItemApplication) getApplication()).getCRUDOperations();
 
         this.toDoListView = findViewById(R.id.toDoListView);
         this.fab = findViewById(R.id.fab);
@@ -221,6 +221,10 @@ public class OverviewActivity extends AppCompatActivity {
         else if (item.getItemId() == R.id.deleteAllItemsLocally){
             showMessage("DELETE ALL ITEMS LOCALLY");
             showMessage("Delete all...");
+            return true;
+        } else if (item.getItemId() == R.id.runSync) {
+            crudOperations.readAllToDoItems();
+            showMessage("Run sync");
             return true;
         } else {
             return super.onOptionsItemSelected(item);

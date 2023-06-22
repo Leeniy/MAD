@@ -3,5 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item app:showAsAction="always" android:title="CHOOSE CONTECT" android:icon="@drawable/baseline_contacts_white_24dp"
         android:id="@+id/selectContact"/>
+    <item app:showAsAction="never" android:title="SEND SMS" android:id="@+id/sendSMS"/>
 
 </menu>

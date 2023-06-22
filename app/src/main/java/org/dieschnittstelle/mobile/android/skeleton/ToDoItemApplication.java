@@ -1,8 +1,10 @@
 package org.dieschnittstelle.mobile.android.skeleton;
 
 import android.app.Application;
+import android.util.Log;
 import android.widget.Toast;
 
+import org.dieschnittstelle.mobile.android.skeleton.model.CacheToDoItemCRUDOperations;
 import org.dieschnittstelle.mobile.android.skeleton.model.IToDoItemCRUDOperations;
 import org.dieschnittstelle.mobile.android.skeleton.model.RetrofitToDoItemCRUDOperationsImpl;
 import org.dieschnittstelle.mobile.android.skeleton.model.RoomToDoItemCRUDOperationsImpl;
@@ -15,7 +17,7 @@ import java.util.concurrent.Future;
 
 public class ToDoItemApplication extends Application {
 
-    private IToDoItemCRUDOperations crudOperations = new RetrofitToDoItemCRUDOperationsImpl();
+    private IToDoItemCRUDOperations crudOperations;
 
     private boolean offLineMode;
 
@@ -24,26 +26,34 @@ public class ToDoItemApplication extends Application {
         super.onCreate();
         try {
             if (checkConnectivity().get()) {
-                Toast.makeText(this, "Backend accessible, will use remote access.", Toast.LENGTH_LONG);
-                this.crudOperations = /*new SyncedToDoItemCRUDOperationsImpl(
-                        new RoomToDoItemCRUDOperationsImpl(this),
-                        new RetrofitToDoItemCRUDOperationsImpl());*/
-                new  RetrofitToDoItemCRUDOperationsImpl();
+                if (isOffLineMode()) {
+                    IToDoItemCRUDOperations crudOperations = new SyncedToDoItemCRUDOperationsImpl(
+                            new RoomToDoItemCRUDOperationsImpl(this),
+                            new RetrofitToDoItemCRUDOperationsImpl());
+                    this.crudOperations = new CacheToDoItemCRUDOperations(crudOperations);
+                    Toast.makeText(this, "Using synched data access", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    this.crudOperations = new RetrofitToDoItemCRUDOperationsImpl();
+                    Toast.makeText(this, "Using remote data access", Toast.LENGTH_LONG).show();
+                }
             } else {
-                this.crudOperations = new RoomToDoItemCRUDOperationsImpl(this);
+                this.crudOperations = new CacheToDoItemCRUDOperations(new RoomToDoItemCRUDOperationsImpl(this));
                 this.offLineMode = true;
+                Toast.makeText(this, "Remote api not accessible. Using local data access", Toast.LENGTH_LONG).show();
             }
-            Toast.makeText(this, "Using CRUD Impl: " + crudOperations.getClass().getSimpleName(), Toast.LENGTH_LONG);
+
         }
            catch (Exception e){
-            this.crudOperations = new RoomToDoItemCRUDOperationsImpl(this);
-            this.offLineMode = true;
+            //this.crudOperations = new RoomToDoItemCRUDOperationsImpl(this);
+            //this.offLineMode = true;
+               throw new RuntimeException("Got excepting trying to run future for checking conectivity: ");
        }
     }
 
     public IToDoItemCRUDOperations getCRUDOperations(){
         Toast.makeText(this, "Using CRUD Impl:" + crudOperations.getClass(), Toast.LENGTH_SHORT).show();
-        return crudOperations;
+        return this.crudOperations;
     }
 
     public CompletableFuture<Boolean> checkConnectivity(){

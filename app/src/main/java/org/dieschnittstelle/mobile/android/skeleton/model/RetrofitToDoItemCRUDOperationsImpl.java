@@ -64,12 +64,12 @@ public class RetrofitToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperatio
 
     @Override
     public List<ToDoItem> readAllToDoItems() {
-        try {
+        /*try {
             Thread.sleep(2500);
         }
         catch (Exception e){
-
-        }
+            throw new RuntimeException(e);
+        }*/
         try {
             return this.toDoItemResource.readAll().execute().body();
         }

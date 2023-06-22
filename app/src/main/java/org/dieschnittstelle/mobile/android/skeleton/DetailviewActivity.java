@@ -91,7 +91,7 @@ public class DetailviewActivity extends AppCompatActivity {
 
         this.binding.setLifecycleOwner(this);
 
-        this.crudOperations = ((ToDoItemApplication) getApplication()).getCRUDOperations();
+        crudOperations = ((ToDoItemApplication) getApplication()).getCRUDOperations();
 
         this.viewmodel = new ViewModelProvider(this).get(DetailviewViewModelImpl.class);
 
@@ -242,9 +242,19 @@ public class DetailviewActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.selectContact) {
             selectContect();
             return true;
+        } else if (item.getItemId() == R.id.sendSMS){
+            sendSMS();
+            return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void sendSMS(){
+        Uri receiverPhoneUri = Uri.parse("smsto:" + "0123456789");
+        Intent sendSMSIntent = new Intent( Intent.ACTION_SENDTO, receiverPhoneUri);
+        sendSMSIntent.putExtra("sms_body", this.viewmodel.getItem().getName() + (this.viewmodel.getItem().getDescription() != null ? ": " + this.viewmodel.getItem().getDescription() : ""));
+        startActivity(sendSMSIntent);
     }
 
     private void selectContect() {
