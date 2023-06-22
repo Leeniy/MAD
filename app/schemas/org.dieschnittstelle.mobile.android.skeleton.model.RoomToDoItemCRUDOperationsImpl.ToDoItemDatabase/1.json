@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "db7f8f35a6281f68d81135361f415ad6",
+    "identityHash": "08e866c3666d67edcd2a32ac765c01b4",
     "entities": [
       {
         "tableName": "ToDoItem",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `description` TEXT, `expiry` INTEGER, `checked` INTEGER NOT NULL, `favourite` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `description` TEXT, `expiry` INTEGER, `contactId` TEXT, `checked` INTEGER NOT NULL, `favourite` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -30,6 +30,12 @@
             "fieldPath": "expiry",
             "columnName": "expiry",
             "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "contactId",
+            "columnName": "contactId",
+            "affinity": "TEXT",
             "notNull": false
           },
           {
@@ -58,7 +64,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'db7f8f35a6281f68d81135361f415ad6')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '08e866c3666d67edcd2a32ac765c01b4')"
     ]
   }
 }

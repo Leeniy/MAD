@@ -2,10 +2,14 @@ package org.dieschnittstelle.mobile.android.skeleton.model;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.checkerframework.framework.qual.DefaultQualifier;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,7 +21,10 @@ public class ToDoItem implements Serializable {
     private String name;
     private String description;
     private Long expiry;
-    //private List<String> contactId;
+
+    @TypeConverters(ListConverters.class)
+    @SerializedName("contacts")
+    private List<String> contactId = new ArrayList<>();
     @SerializedName("done")
     private boolean checked;
     private boolean favourite;
@@ -80,13 +87,16 @@ public class ToDoItem implements Serializable {
         this.favourite = favourite;
     }
 
-    /*public List<String> getContactId() {
+    public List<String> getContactId() {
+        if (contactId == null){
+            this.contactId = new ArrayList<>();
+        }
         return contactId;
     }
 
     public void setContactId(List<String> contactId) {
         this.contactId = contactId;
-    }*/
+    }
 
     @Override
     public boolean equals(Object o) {

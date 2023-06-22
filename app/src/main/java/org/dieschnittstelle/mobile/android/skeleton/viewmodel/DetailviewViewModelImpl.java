@@ -1,7 +1,9 @@
 package org.dieschnittstelle.mobile.android.skeleton.viewmodel;
 
+import android.content.Intent;
 import android.view.inputmethod.EditorInfo;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 

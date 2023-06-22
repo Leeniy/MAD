@@ -41,7 +41,6 @@ import java.util.List;
 public class OverviewActivity extends AppCompatActivity {
 
     private ListView toDoListView;
-    private List<ToDoItem> listData = new ArrayList<>();
     private ArrayAdapter<ToDoItem> toDoListViewAdapter;
 
     OverviewViewModelImpl overviewViewModel;
@@ -95,6 +94,12 @@ public class OverviewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_overview);
         this.overviewViewModel = new ViewModelProvider(this).get(OverviewViewModelImpl.class);
 
+        boolean initialViewmodel = false;
+        if(overviewViewModel.getToDoItem() == null){
+            overviewViewModel.setItems(new ArrayList<>());
+            initialViewmodel = true;
+        }
+
         this.crudOperations = ((ToDoItemApplication) getApplication()).getCRUDOperations();
 
         this.toDoListView = findViewById(R.id.toDoListView);
@@ -109,7 +114,7 @@ public class OverviewActivity extends AppCompatActivity {
         });
 
         // prepare the List view
-        this.toDoListViewAdapter = new ArrayAdapter<>(this, R.layout.activity_overview_listitem, listData) {
+        this.toDoListViewAdapter = new ArrayAdapter<>(this, R.layout.activity_overview_listitem, overviewViewModel.getToDoItem()) {
             @NonNull
             @Override
             public View getView(int position, @Nullable View existingListToDoItemView, @NonNull ViewGroup parent) {
@@ -148,19 +153,15 @@ public class OverviewActivity extends AppCompatActivity {
 
 
 
-        if (overviewViewModel.getToDoItem() == null){
+        if (initialViewmodel){
             operationRunner.run(
                     // Supplier (= the operation)
                     () -> crudOperations.readAllToDoItems(),
                     // Consumer (= the reaction to the operation result)
                     toDoItems -> {
-                        toDoListViewAdapter.addAll(toDoItems);
-                        overviewViewModel.setItems(toDoItems);
+                        overviewViewModel.getToDoItem().addAll(toDoItems);
                         sortToDoItems();
                     });
-        }
-        else {
-            toDoListViewAdapter.addAll(overviewViewModel.getToDoItem());
         }
     }
 
@@ -191,14 +192,8 @@ public class OverviewActivity extends AppCompatActivity {
                 updated -> {
                     Log.i(OverviewActivity.class.getSimpleName(), "item id: " + item.getId() + "," + item.getName());
                     int posOfToDoItemInList = toDoListViewAdapter.getPosition(item);
-                    ToDoItem itemInList = toDoListViewAdapter.getItem(posOfToDoItemInList);
-                    itemInList.setName(item.getName());
-                    itemInList.setDescription(item.getDescription());
-                    itemInList.setChecked(item.isChecked());
-                    itemInList.setFavourite(item.isFavourite());
-                    itemInList.setExpiry(item.getExpiry());
-                    //this.overviewViewModel.getToDoItem().remove(posOfToDoItemInList);
-                    //this.overviewViewModel.getToDoItem().add(item);
+                    this.overviewViewModel.getToDoItem().remove(posOfToDoItemInList);
+                    this.overviewViewModel.getToDoItem().add(item);
                     sortToDoItems();
                     toDoListViewAdapter.notifyDataSetChanged();
                 }
@@ -233,7 +228,7 @@ public class OverviewActivity extends AppCompatActivity {
     }
 
     public void sortToDoItems(){
-        this.listData.sort(this.overviewViewModel.getCurrentSortMode());
+        this.overviewViewModel.getToDoItem().sort(this.overviewViewModel.getCurrentSortMode());
         this.toDoListViewAdapter.notifyDataSetChanged();
     }
 
