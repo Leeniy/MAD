@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="item"
+            type="org.dieschnittstelle.mobile.android.skeleton.model.ToDoItem" />
+        <variable
+            name="controller"
+            type="org.dieschnittstelle.mobile.android.skeleton.DetailviewActivity" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/smsButton"
+            android:src="@drawable/sms"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:focusable="false"
+            android:id="@+id/mailButton"
+            android:src="@drawable/mail"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/contactName"
+            android:textSize="20dp"
+            android:text="@{controller.contactName}"/>
+    </LinearLayout>
+
+</layout>

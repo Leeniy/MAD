@@ -16,7 +16,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -25,24 +29,21 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.BindingAdapter;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
 
-import org.checkerframework.checker.units.qual.C;
 import org.dieschnittstelle.mobile.android.skeleton.databinding.ActivityDetailviewBinding;
+import org.dieschnittstelle.mobile.android.skeleton.databinding.ActivityDetailviewListcontactBinding;
 import org.dieschnittstelle.mobile.android.skeleton.model.IToDoItemCRUDOperations;
 import org.dieschnittstelle.mobile.android.skeleton.model.ToDoItem;
 import org.dieschnittstelle.mobile.android.skeleton.viewmodel.DetailviewViewModelImpl;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.logging.Logger;
 
 public class DetailviewActivity extends AppCompatActivity {
 
@@ -55,7 +56,9 @@ public class DetailviewActivity extends AppCompatActivity {
 
     private ActivityDetailviewBinding binding;
 
-    private DetailviewViewModelImpl viewmodel;
+    DetailviewViewModelImpl detailViewmodel;
+
+    private String contactName;
 
     private ActivityResultLauncher<Intent> showContectsLuncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -69,6 +72,7 @@ public class DetailviewActivity extends AppCompatActivity {
     IToDoItemCRUDOperations crudOperations;
 
     int cyear, cmonth, cday, chour, cminutes;
+
     String time;
     String date;
 
@@ -86,35 +90,35 @@ public class DetailviewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         Log.i(DetailviewActivity.class.getSimpleName(), "onCreate invoked");
+        setContentView(R.layout.activity_detailview);
+        this.detailViewmodel = new ViewModelProvider(this).get(DetailviewViewModelImpl.class);
+
+        crudOperations = ((ToDoItemApplication) getApplication()).getCRUDOperations();
 
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_detailview);
 
         this.binding.setLifecycleOwner(this);
 
-        crudOperations = ((ToDoItemApplication) getApplication()).getCRUDOperations();
-
-        this.viewmodel = new ViewModelProvider(this).get(DetailviewViewModelImpl.class);
-
-        if (this.viewmodel.getItem() == null) {
+        if (this.detailViewmodel.getItem() == null) {
             ToDoItem item = (ToDoItem) getIntent().getSerializableExtra(ARG_ITEM);
             if (item == null){
-                this.viewmodel.setItem(new ToDoItem());
+                this.detailViewmodel.setItem(new ToDoItem());
             }
             else {
-                this.viewmodel.setItem(item);
+                this.detailViewmodel.setItem(item);
             }
         }
         else {
-            Log.i(DetailviewActivity.class.getSimpleName(), "use item from viewmodel: " + this.viewmodel.getItem());
+            Log.i(DetailviewActivity.class.getSimpleName(), "use item from viewmodel: " + this.detailViewmodel.getItem());
         }
 
-        this.viewmodel.getSavedOcurred().observe(this, occurred -> {
+        this.detailViewmodel.getSavedOcurred().observe(this, occurred -> {
             onItemSaved();
         });
 
-        this.binding.setViewmodel(this.viewmodel);
+        this.binding.setViewmodel(this.detailViewmodel);
 
-        this.expiry = this.viewmodel.getItem().getExpiry();
+        this.expiry = this.detailViewmodel.getItem().getExpiry();
 
         if (expiry != null){
             df = new java.util.Date((long)expiry);
@@ -135,9 +139,11 @@ public class DetailviewActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 final Calendar calender = Calendar.getInstance();
-                cyear = calender.get(Calendar.YEAR);
-                cmonth = calender.get(Calendar.MONTH);
-                cday = calender.get(Calendar.DAY_OF_MONTH);
+                cyear = Integer.parseInt(vv.substring(6,10));
+                cmonth = Integer.parseInt(vv.substring(3,5))-1;
+                cday = Integer.parseInt(vv.substring(0,2));
+                Log.i(OverviewActivity.class.getSimpleName(), "year: " + cyear + " month: " + cmonth + " day: " + cday);
+                calender.set(cyear, cmonth, cday);
 
                 DatePickerDialog datePickerDialog =
                         new DatePickerDialog(DetailviewActivity.this, new DatePickerDialog.OnDateSetListener() {
@@ -148,7 +154,6 @@ public class DetailviewActivity extends AppCompatActivity {
                                 setNewDateTime();
                             }
                         }, cyear, cmonth, cday);
-                datePickerDialog.getDatePicker().setMinDate(calender.getTimeInMillis()-1000);
                 datePickerDialog.show();
             }
         });
@@ -157,8 +162,11 @@ public class DetailviewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final Calendar calendar = Calendar.getInstance();
-                chour = calendar.get(Calendar.HOUR);
-                cminutes = calendar.get(Calendar.MINUTE);
+                chour = Integer.parseInt(vv.substring(11,13));
+                cminutes = Integer.parseInt(vv.substring(14,16));
+                calendar.set(chour, cminutes);
+                Log.i(OverviewActivity.class.getSimpleName(), "hour: " + chour + " minutes: " + cminutes);
+
                 TimePickerDialog timePickerDialog =
                         new TimePickerDialog(DetailviewActivity.this, new TimePickerDialog.OnTimeSetListener() {
                             @Override
@@ -188,7 +196,7 @@ public class DetailviewActivity extends AppCompatActivity {
         builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                crudOperations.deleteToDoItem(viewmodel.getItem().getId());
+                crudOperations.deleteToDoItem(detailViewmodel.getItem().getId());
                 dialog.dismiss();
             }
         });
@@ -212,8 +220,8 @@ public class DetailviewActivity extends AppCompatActivity {
 
     public void onItemSaved() {
         Intent returnIntent = new Intent();
-        returnIntent.putExtra(ARG_ITEM, this.viewmodel.getItem());
-        setResult(this.viewmodel.getItem().getId() == 0L ? ITEM_CREATED : ITEM_EDITED, returnIntent);
+        returnIntent.putExtra(ARG_ITEM, this.detailViewmodel.getItem());
+        setResult(this.detailViewmodel.getItem().getId() == 0L ? ITEM_CREATED : ITEM_EDITED, returnIntent);
         setNewDateTime();
         finish();
     }
@@ -228,7 +236,7 @@ public class DetailviewActivity extends AppCompatActivity {
         }
         Log.i(DetailviewActivity.class.getSimpleName(), "date check " + df);
         expiry = df.getTime();
-        viewmodel.getItem().setExpiry(expiry);
+        detailViewmodel.getItem().setExpiry(expiry);
     }
 
     @Override
@@ -245,6 +253,9 @@ public class DetailviewActivity extends AppCompatActivity {
         } else if (item.getItemId() == R.id.sendSMS){
             sendSMS();
             return true;
+        } else if (item.getItemId() == R.id.sendMail){
+            sendMail();
+            return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
@@ -253,8 +264,16 @@ public class DetailviewActivity extends AppCompatActivity {
     private void sendSMS(){
         Uri receiverPhoneUri = Uri.parse("smsto:" + "0123456789");
         Intent sendSMSIntent = new Intent( Intent.ACTION_SENDTO, receiverPhoneUri);
-        sendSMSIntent.putExtra("sms_body", this.viewmodel.getItem().getName() + (this.viewmodel.getItem().getDescription() != null ? ": " + this.viewmodel.getItem().getDescription() : ""));
+        sendSMSIntent.putExtra("sms_body", this.detailViewmodel.getItem().getName() + (this.detailViewmodel.getItem().getDescription() != null ? ": " + this.detailViewmodel.getItem().getDescription() : ""));
         startActivity(sendSMSIntent);
+    }
+
+    private void sendMail(){
+        Uri receiverMailUri = Uri.parse("mailto:" + "test@test.de");
+        Intent sendMailIntent = new Intent( Intent.ACTION_SENDTO, receiverMailUri);
+        sendMailIntent.putExtra(Intent.EXTRA_SUBJECT, this.detailViewmodel.getItem().getName());
+        sendMailIntent.putExtra (Intent.EXTRA_TEXT, this.detailViewmodel.getItem().getDescription() != null ? ": " + this.detailViewmodel.getItem().getDescription() : "");
+        startActivity(sendMailIntent);
     }
 
     private void selectContect() {
@@ -270,12 +289,17 @@ public class DetailviewActivity extends AppCompatActivity {
 
         if (cursor.moveToFirst()){
              String contectName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+             this.contactName = contectName;
              Log.i(LOGGER, "contactName: " + contectName);
              long intentContactId = cursor.getLong(cursor.getColumnIndex(ContactsContract.Contacts._ID));
             Log.i(LOGGER, "internalContactId: " + intentContactId);
-             this.viewmodel.getItem().getContactId().add(String.valueOf(intentContactId));
+             this.detailViewmodel.getItem().getContactId().add(String.valueOf(intentContactId));
              showContactDetailsForInternalId(intentContactId);
         }
+    }
+
+    public String getContactName() {
+        return contactName;
     }
 
     private long lastSelectedInternalCOntactId = -1;
