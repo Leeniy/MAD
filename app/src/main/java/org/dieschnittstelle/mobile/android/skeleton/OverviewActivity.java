@@ -37,7 +37,9 @@ import org.dieschnittstelle.mobile.android.skeleton.util.MADAsyncOperationRunner
 import org.dieschnittstelle.mobile.android.skeleton.viewmodel.OverviewViewModelImpl;
 
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class OverviewActivity extends AppCompatActivity {
 
@@ -53,6 +55,8 @@ public class OverviewActivity extends AppCompatActivity {
     private ProgressBar progressBar;
 
     private MADAsyncOperationRunner operationRunner;
+
+    private String timeDate;
 
     private ActivityResultLauncher<Intent> DetailviewLauncherForEdit = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -135,6 +139,7 @@ public class OverviewActivity extends AppCompatActivity {
                 itemBinding.setItem(item);
                 itemBinding.setController(OverviewActivity.this);
                 itemBinding.setItem(item);
+                setTimeDate(item);
 
                 return itemBinding.getRoot();
             }
@@ -178,6 +183,7 @@ public class OverviewActivity extends AppCompatActivity {
                 () -> this.crudOperations.createToDoItem(item),
                 createdToDoItem -> {
                     this.toDoListViewAdapter.add(createdToDoItem);
+                    setTimeDate(item);
                     sortToDoItems();
                 }
         );
@@ -192,6 +198,7 @@ public class OverviewActivity extends AppCompatActivity {
                     this.overviewViewModel.getToDoItem().remove(posOfToDoItemInList);
                     this.overviewViewModel.getToDoItem().add(item);
                     sortToDoItems();
+                    setTimeDate(item);
                     toDoListViewAdapter.notifyDataSetChanged();
                 }
         );
@@ -238,6 +245,7 @@ public class OverviewActivity extends AppCompatActivity {
                 () -> crudOperations.updateToDoItem(item),
                 updateditem -> {
                     this.sortToDoItems();
+                    setTimeDate(item);
                     showMessage("Checked change for: " + item.getName());
                 }
         );
@@ -249,4 +257,13 @@ public class OverviewActivity extends AppCompatActivity {
         }
     }
 
+    public String getTimeDate() {
+        return timeDate;
+    }
+
+    public void setTimeDate(ToDoItem item) {
+        long expiry = item.getExpiry();
+        Date df = new java.util.Date((long) expiry);
+        this.timeDate = new SimpleDateFormat("dd.MM.yyyy hh:mm").format(df);
+    }
 }

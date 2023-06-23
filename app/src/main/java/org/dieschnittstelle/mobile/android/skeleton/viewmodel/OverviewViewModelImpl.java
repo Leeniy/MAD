@@ -48,4 +48,9 @@ public class OverviewViewModelImpl extends ViewModel implements IOverviewViewMod
 
     }
 
+    @Override
+    public ToDoItem getItem() {
+        return item;
+    }
+
 }
