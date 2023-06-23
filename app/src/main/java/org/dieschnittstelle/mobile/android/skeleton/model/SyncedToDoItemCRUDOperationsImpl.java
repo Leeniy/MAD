@@ -47,12 +47,23 @@ public class SyncedToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperations
     }
 
     @Override
-    public boolean deleteAllTodoItems(boolean remote) {
+    public void deleteAllTodoItems(boolean remote) {
         if (remote){
-            return this.remoteCRUD.deleteAllTodoItems(remote);
+            this.remoteCRUD.deleteAllTodoItems(remote);
         } else {
-            return this.localCRUD.deleteAllTodoItems(remote);
+            this.localCRUD.deleteAllTodoItems(remote);
         }
+    }
+
+    @Override
+    public boolean deleteAllLocaToDoItems() {
+        //return ((RoomToDoItemCRUDOperationsImpl)this.remoteCRUD).de();
+        return true;
+    }
+
+    @Override
+    public boolean deleteAllRemoteToDoItems() {
+        return ((RetrofitToDoItemCRUDOperationsImpl)this.remoteCRUD).deleteAllTodos();
     }
 
     @Override

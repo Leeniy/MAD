@@ -222,13 +222,23 @@ public class OverviewActivity extends AppCompatActivity {
             showMessage("Sorting...");
             return true;
         }
-        else if (item.getItemId() == R.id.deleteAllItemsLocally){
+        else if (item.getItemId() == R.id.deleteAllItems){
             showMessage("DELETE ALL ITEMS LOCALLY");
+            //crudOperations.deleteAllTodoItems(true);
             showMessage("Delete all...");
             return true;
         } else if (item.getItemId() == R.id.runSync) {
-            crudOperations.readAllToDoItems();
+            //crudOperations.updateToDoItem();
+            //crudOperations.readAllToDoItems();
             showMessage("Run sync");
+            return true;
+        } else if (item.getItemId() == R.id.deleteAllItemsLocally) {
+            crudOperations.deleteAllTodoItems(false);
+            showMessage("Delete all... Locally");
+            return true;
+        } else if (item.getItemId() == R.id.deleteAllItemsRemote) {
+            crudOperations.deleteAllTodoItems(true);
+            showMessage("Delete all... Remote");
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -263,7 +273,7 @@ public class OverviewActivity extends AppCompatActivity {
 
     public void setTimeDate(ToDoItem item) {
         long expiry = item.getExpiry();
-        Date df = new java.util.Date((long) expiry);
+        Date df = new java.util.Date(expiry);
         this.timeDate = new SimpleDateFormat("dd.MM.yyyy hh:mm").format(df);
     }
 }

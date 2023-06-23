@@ -9,7 +9,15 @@
         app:showAsAction="always"/>
 
     <item android:title="DELETE ALL"
+        android:id="@+id/deleteAllItems"
+        app:showAsAction="never"/>
+
+    <item android:title="DELETE ALL LOCAL"
         android:id="@+id/deleteAllItemsLocally"
+        app:showAsAction="never"/>
+
+    <item android:title="DELETE ALL REMOTE"
+        android:id="@+id/deleteAllItemsRemote"
         app:showAsAction="never"/>
 
     <item android:title="RUN SYNC"

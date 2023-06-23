@@ -1,7 +1,5 @@
 package org.dieschnittstelle.mobile.android.skeleton.model;
 
-import org.json.JSONObject;
-
 import java.util.List;
 
 import retrofit2.Call;
@@ -110,7 +108,16 @@ public class RetrofitToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperatio
     }
 
     @Override
-    public boolean deleteAllTodoItems(boolean remote) {
+    public void deleteAllTodoItems(boolean remote) {
+    }
+
+    @Override
+    public boolean deleteAllLocaToDoItems() {
+        return false;
+    }
+
+    @Override
+    public boolean deleteAllRemoteToDoItems() {
         return false;
     }
 
