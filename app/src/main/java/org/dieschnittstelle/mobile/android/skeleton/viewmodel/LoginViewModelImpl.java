@@ -14,6 +14,9 @@ import org.dieschnittstelle.mobile.android.skeleton.OverviewActivity;
 import org.dieschnittstelle.mobile.android.skeleton.R;
 import org.dieschnittstelle.mobile.android.skeleton.model.User;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class LoginViewModelImpl extends ViewModel implements ILoginViewModel {
 
     private MutableLiveData<String> errorStatus = new MutableLiveData<>();
@@ -23,6 +26,11 @@ public class LoginViewModelImpl extends ViewModel implements ILoginViewModel {
     private String mail;
 
     private String pw;
+
+    private Boolean loginstatus = false;
+
+    private Boolean validMail = false;
+    private Boolean validPW = false;
 
     public String getPw() {
         return pw;
@@ -40,13 +48,25 @@ public class LoginViewModelImpl extends ViewModel implements ILoginViewModel {
         this.mail = mail;
     }
 
+    public Boolean getLoginstatus() {
+        return loginstatus;
+    }
+
+    public void setLoginstatus(Boolean loginstatus) {
+        this.loginstatus = loginstatus;
+    }
+
     public boolean checkFieldInputCompleted(int actionId) {
-        Log.i(OverviewActivity.class.getSimpleName(), "mail: " + mail );
-        if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT){
-            if ( mail.contains("@") || mail.contains(".")){
-                errorStatus.setValue("No Email");
+        Log.i(OverviewActivity.class.getSimpleName(), "checkField " + mail);
+        String validRegex = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$";
+
+            if (mail == null || !mail.matches(validRegex)){
+                errorStatus.setValue("Invalid Email Address");
+                validMail = false;
+            } else {
+                validMail = true;
             }
-        }
+            inputStatus();
         return false;
     }
 
@@ -64,11 +84,13 @@ public class LoginViewModelImpl extends ViewModel implements ILoginViewModel {
 
     public boolean checkPWFieldInputCompleted(int actionId) {
         Log.i(OverviewActivity.class.getSimpleName(), " pw: " + pw);
-        if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT){
-            if ( pw == null || pw.length() ==6){
-                errorStatusPW.setValue("To Short!");
+            if ( pw == null || pw.length() != 6){
+                errorStatusPW.setValue("Invalid PW Format");
+                validPW = false;
+            } else {
+                validPW = true;
             }
-        }
+            inputStatus();
         return false;
     }
 
@@ -81,6 +103,14 @@ public class LoginViewModelImpl extends ViewModel implements ILoginViewModel {
 
     public MutableLiveData<String> getErrorStatusPW() {
         return this.errorStatusPW;
+    }
+
+    public void inputStatus (){
+        if (validMail && validPW){
+            loginstatus = true;
+        } else {
+            loginstatus = false;
+        }
     }
 
 }

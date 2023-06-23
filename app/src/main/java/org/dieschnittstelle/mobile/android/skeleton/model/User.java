@@ -11,8 +11,6 @@ import java.util.Objects;
 @Entity
 public class User implements Serializable {
 
-    @PrimaryKey(autoGenerate = true)
-    private long id;
     private String mail;
 
     private String pw;
@@ -26,15 +24,7 @@ public class User implements Serializable {
         this.pw = pw;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setMail(String mail) {
+    /*public void setMail(String mail) {
         this.mail = mail;
     }
 
@@ -48,6 +38,6 @@ public class User implements Serializable {
 
     public String getPw() {
         return pw;
-    }
+    }*/
 }
 

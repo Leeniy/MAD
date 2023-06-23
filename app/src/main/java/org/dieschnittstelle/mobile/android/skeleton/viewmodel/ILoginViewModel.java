@@ -12,6 +12,8 @@ public interface ILoginViewModel {
 
     public MutableLiveData<String> getErrorStatus();
 
+    public boolean checkPWFieldInputCompleted(int actionId);
+
     public boolean onPWFieldInputChanged();
 
     public MutableLiveData<String> getErrorStatusPW();
@@ -23,4 +25,9 @@ public interface ILoginViewModel {
     public void setPw(String pw);
 
     public void setMail(String mail);
+
+    public void setLoginstatus(Boolean loginstatus);
+
+    public Boolean getLoginstatus();
+
 }

@@ -2,7 +2,6 @@ package org.dieschnittstelle.mobile.android.skeleton.model;
 
 import android.content.Context;
 
-import androidx.room.AutoMigration;
 import androidx.room.Dao;
 import androidx.room.Database;
 import androidx.room.Delete;
@@ -81,7 +80,8 @@ public class RoomToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperations {
         return false;
     }
 
-    public boolean login(User user) {
+    @Override
+    public Boolean login(User user) {
         return false;
     }
 

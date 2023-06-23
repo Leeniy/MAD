@@ -69,7 +69,7 @@ public class CacheToDoItemCRUDOperations implements IToDoItemCRUDOperations{
     }
 
     @Override
-    public boolean login(User user) {
+    public Boolean login(User user) {
         return false;
     }
 }

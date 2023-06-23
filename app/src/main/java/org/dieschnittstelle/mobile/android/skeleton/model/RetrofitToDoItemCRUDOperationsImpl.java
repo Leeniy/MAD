@@ -1,6 +1,6 @@
 package org.dieschnittstelle.mobile.android.skeleton.model;
 
-import androidx.annotation.RequiresPermission;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -114,6 +114,7 @@ public class RetrofitToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperatio
         return false;
     }
 
+
     public boolean deleteAllTodos(){
         try {
             this.toDoItemResource.deleteAllTodos().execute().body();
@@ -123,10 +124,10 @@ public class RetrofitToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperatio
         }
     }
 
-    public boolean login(User user){
+    @Override
+    public Boolean login(User user){
         try {
-            this.toDoItemResource.login(user).execute().body();
-            return true;
+            return this.toDoItemResource.login(user).execute().body();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
