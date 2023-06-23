@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.ListView;
@@ -41,9 +42,11 @@ import org.dieschnittstelle.mobile.android.skeleton.viewmodel.DetailviewViewMode
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class DetailviewActivity extends AppCompatActivity {
 
@@ -55,6 +58,10 @@ public class DetailviewActivity extends AppCompatActivity {
     private static String LOGGER = DetailviewActivity.class.getSimpleName();
 
     private ActivityDetailviewBinding binding;
+
+    private ListView listView;
+    private List<String> contectIdsList = new ArrayList<>(Arrays.asList("test", "test"));
+    private ArrayAdapter<String> listviewAdapter;
 
     DetailviewViewModelImpl detailViewmodel;
 
@@ -90,7 +97,11 @@ public class DetailviewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         Log.i(DetailviewActivity.class.getSimpleName(), "onCreate invoked");
+
         setContentView(R.layout.activity_detailview);
+        this.listView = findViewById(R.id.contactListView);
+
+
         this.detailViewmodel = new ViewModelProvider(this).get(DetailviewViewModelImpl.class);
 
         crudOperations = ((ToDoItemApplication) getApplication()).getCRUDOperations();
@@ -117,6 +128,28 @@ public class DetailviewActivity extends AppCompatActivity {
         });
 
         this.binding.setViewmodel(this.detailViewmodel);
+
+        /*Arrays.asList(this.contectIdsList)
+                .forEach(contactItem -> {
+                    @SuppressLint("InflateParams") TextView itemView = (TextView) getLayoutInflater().inflate(R.layout.activity_detailview_listcontact, null);
+                    itemView.setText(contactItem);
+                    this.listView.addView(itemView);
+                });*/
+
+        this.listviewAdapter = new ArrayAdapter<>(this, R.layout.activity_detailview_listcontact, contectIdsList) {
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                TextView textView = new TextView(parent.getContext());
+                textView.setText(position);
+                convertView = textView;
+                return textView;
+            }
+        };
+
+        Log.i(DetailviewActivity.class.getSimpleName(), "List:  " + contectIdsList);
+
+
 
         this.expiry = this.detailViewmodel.getItem().getExpiry();
 
@@ -281,7 +314,7 @@ public class DetailviewActivity extends AppCompatActivity {
     }
     @SuppressLint("Range")
     private void onContactSelected(Intent resultData) {
-        Log.i(LOGGER, "onCOntectSelected(): " + resultData);
+        Log.i(LOGGER, "onContectSelected(): " + resultData);
         Uri selectedContactUri = resultData.getData();
         Log.i(LOGGER, "onContactSelected(): selected ContactUri: " + selectedContactUri);
 
@@ -296,10 +329,6 @@ public class DetailviewActivity extends AppCompatActivity {
              this.detailViewmodel.getItem().getContactId().add(String.valueOf(intentContactId));
              showContactDetailsForInternalId(intentContactId);
         }
-    }
-
-    public String getContactName() {
-        return contactName;
     }
 
     private long lastSelectedInternalCOntactId = -1;
@@ -332,14 +361,14 @@ public class DetailviewActivity extends AppCompatActivity {
         }
     }
 
-    @Override
+    /*@Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         Log.i(LOGGER, "onRequestPermsissionResult(): " + Arrays.asList(permissions)+ ", "+ Arrays.asList(grantResults));
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (lastSelectedInternalCOntactId != -1){
             showContactDetailsForInternalId(lastSelectedInternalCOntactId);
         }
-    }
+    }*/
 
     public boolean hasContactPermission() {
         int hasReadContactPermission = checkSelfPermission(Manifest.permission.READ_CONTACTS);

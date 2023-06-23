@@ -104,7 +104,6 @@ public class RetrofitToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperatio
         try {
             this.toDoItemResource.delete(id).execute().body();
             return true;
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

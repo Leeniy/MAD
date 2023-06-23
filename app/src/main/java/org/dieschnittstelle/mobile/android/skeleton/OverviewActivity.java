@@ -2,6 +2,7 @@ package org.dieschnittstelle.mobile.android.skeleton;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -34,9 +36,8 @@ import org.dieschnittstelle.mobile.android.skeleton.model.ToDoItem;
 import org.dieschnittstelle.mobile.android.skeleton.util.MADAsyncOperationRunner;
 import org.dieschnittstelle.mobile.android.skeleton.viewmodel.OverviewViewModelImpl;
 
+
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 
 public class OverviewActivity extends AppCompatActivity {
 
@@ -81,7 +82,6 @@ public class OverviewActivity extends AppCompatActivity {
             }
     );
 
-    @SuppressLint("StaticFieldLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -104,6 +104,7 @@ public class OverviewActivity extends AppCompatActivity {
 
         this.toDoListView = findViewById(R.id.toDoListView);
         this.fab = findViewById(R.id.fab);
+
 
         this.progressBar = findViewById(R.id.progressBar);
 
@@ -135,9 +136,6 @@ public class OverviewActivity extends AppCompatActivity {
                 itemBinding.setController(OverviewActivity.this);
                 itemBinding.setItem(item);
 
-                /*if (item.getExpiry() < System.currentTimeMillis()){
-                    findViewById(R.id.todoName).setBackgroundColor(Color.BLUE);
-                }*/
                 return itemBinding.getRoot();
             }
         };
@@ -151,8 +149,6 @@ public class OverviewActivity extends AppCompatActivity {
             }
         });
 
-
-
         if (initialViewmodel){
             operationRunner.run(
                     // Supplier (= the operation)
@@ -163,6 +159,7 @@ public class OverviewActivity extends AppCompatActivity {
                         sortToDoItems();
                     });
         }
+
     }
 
     public void onListItemSelected(ToDoItem listitem) {
@@ -245,4 +242,11 @@ public class OverviewActivity extends AppCompatActivity {
                 }
         );
     }
+
+    public void onOverdue(ToDoItem item) {
+        if (item.getExpiry() < System.currentTimeMillis()) {
+            findViewById(R.id.todoName).setBackgroundColor(Color.BLUE);
+        }
+    }
+
 }

@@ -52,11 +52,9 @@
                 android:id="@+id/todoDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{item.name}"
                 android:padding="5dp"
                 android:textSize="30dp" />
         </LinearLayout>
-
     </LinearLayout>
 </layout>
 
