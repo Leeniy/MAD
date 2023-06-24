@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -38,6 +39,7 @@ import org.dieschnittstelle.mobile.android.skeleton.databinding.ActivityDetailvi
 import org.dieschnittstelle.mobile.android.skeleton.databinding.ActivityDetailviewListcontactBinding;
 import org.dieschnittstelle.mobile.android.skeleton.model.IToDoItemCRUDOperations;
 import org.dieschnittstelle.mobile.android.skeleton.model.ToDoItem;
+import org.dieschnittstelle.mobile.android.skeleton.util.MADAsyncOperationRunner;
 import org.dieschnittstelle.mobile.android.skeleton.viewmodel.DetailviewViewModelImpl;
 
 import java.text.ParseException;
@@ -65,7 +67,12 @@ public class DetailviewActivity extends AppCompatActivity {
 
     DetailviewViewModelImpl detailViewmodel;
 
+    private MADAsyncOperationRunner operationRunner;
+    private ProgressBar progressBar;
+
     private String contactName;
+
+    private Intent intent;
 
     private ActivityResultLauncher<Intent> showContectsLuncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -92,6 +99,7 @@ public class DetailviewActivity extends AppCompatActivity {
         Log.i(DetailviewActivity.class.getSimpleName(), "consructor invoked");
     }
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,9 +114,14 @@ public class DetailviewActivity extends AppCompatActivity {
 
         crudOperations = ((ToDoItemApplication) getApplication()).getCRUDOperations();
 
+        this.progressBar = findViewById(R.id.progressBarDetail);
+        this.operationRunner = new MADAsyncOperationRunner(this, this.progressBar);
+
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_detailview);
 
         this.binding.setLifecycleOwner(this);
+
+        intent = new Intent(this, OverviewActivity.class);
 
         if (this.detailViewmodel.getItem() == null) {
             ToDoItem item = (ToDoItem) getIntent().getSerializableExtra(ARG_ITEM);
@@ -229,8 +242,14 @@ public class DetailviewActivity extends AppCompatActivity {
         builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                crudOperations.deleteToDoItem(detailViewmodel.getItem().getId());
+                operationRunner.run(
+                        () -> crudOperations.deleteToDoItem(detailViewmodel.getItem().getId()),
+                        result -> {
+                            result = true;
+                        }
+                );
                 dialog.dismiss();
+                startActivity(intent);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
