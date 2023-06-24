@@ -26,17 +26,11 @@ public class ToDoItemApplication extends Application {
         super.onCreate();
         try {
             if (checkConnectivity().get()) {
-                if (isOffLineMode()) {
                     IToDoItemCRUDOperations crudOperations = new SyncedToDoItemCRUDOperationsImpl(
                             new RoomToDoItemCRUDOperationsImpl(this),
                             new RetrofitToDoItemCRUDOperationsImpl());
                     this.crudOperations = new CacheToDoItemCRUDOperations(crudOperations);
                     Toast.makeText(this, "Using synched data access", Toast.LENGTH_LONG).show();
-                }
-                else {
-                    this.crudOperations = new RetrofitToDoItemCRUDOperationsImpl();
-                    Toast.makeText(this, "Using remote data access", Toast.LENGTH_LONG).show();
-                }
             } else {
                 this.crudOperations = new CacheToDoItemCRUDOperations(new RoomToDoItemCRUDOperationsImpl(this));
                 this.offLineMode = true;

@@ -108,7 +108,11 @@ public class RetrofitToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperatio
 
     @Override
     public boolean deleteAllTodoItems(boolean remote) {
-        return deleteAllTodos();
+        if (remote){
+            return deleteAllTodos();
+        } else {
+            return false;
+        }
     }
 
     @Override

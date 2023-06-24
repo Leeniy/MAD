@@ -58,6 +58,8 @@ public class OverviewActivity extends AppCompatActivity {
 
     private String timeDate;
 
+    private Intent intent;
+
     private ActivityResultLauncher<Intent> DetailviewLauncherForEdit = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -109,6 +111,7 @@ public class OverviewActivity extends AppCompatActivity {
         this.toDoListView = findViewById(R.id.toDoListView);
         this.fab = findViewById(R.id.fab);
 
+        intent = new Intent(this, OverviewActivity.class);
 
         this.progressBar = findViewById(R.id.progressBar);
 
