@@ -139,13 +139,14 @@ public class OverviewActivity extends AppCompatActivity {
                 itemBinding.setItem(item);
                 itemBinding.setController(OverviewActivity.this);
                 itemBinding.setItem(item);
-                setTimeDate(item);
+                //setTimeDate(item);
 
                 return itemBinding.getRoot();
             }
         };
 
         this.toDoListView.setAdapter(this.toDoListViewAdapter);
+
         this.toDoListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int positionOfSelectedElement, long l) {
@@ -286,5 +287,8 @@ public class OverviewActivity extends AppCompatActivity {
         long expiry = item.getExpiry();
         Date df = new java.util.Date(expiry);
         this.timeDate = new SimpleDateFormat("dd.MM.yyyy hh:mm").format(df);
+        /*if (expiry < System.currentTimeMillis()){
+            findViewById(R.id.todoDate).setBackgroundColor(Color.RED);
+        } */
     }
 }

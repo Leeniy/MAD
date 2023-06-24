@@ -107,7 +107,9 @@ public class DetailviewActivity extends AppCompatActivity {
         Log.i(DetailviewActivity.class.getSimpleName(), "onCreate invoked");
 
         setContentView(R.layout.activity_detailview);
-        this.listView = findViewById(R.id.contactListView);
+        listView = findViewById(R.id.contactListView);
+
+        listviewAdapter = new ArrayAdapter<>(this, R.layout.activity_detailview_listcontact, contectIdsList);
 
 
         this.detailViewmodel = new ViewModelProvider(this).get(DetailviewViewModelImpl.class);
