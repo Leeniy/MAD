@@ -104,7 +104,7 @@ public class OverviewActivity extends AppCompatActivity {
             initialViewmodel = true;
         }
 
-        crudOperations = ((ToDoItemApplication) getApplication()).getCRUDOperations();
+        crudOperations = ((ToDoItemApplication)this.getApplication()).getCRUDOperations();
 
         this.toDoListView = findViewById(R.id.toDoListView);
         this.fab = findViewById(R.id.fab);
@@ -228,17 +228,28 @@ public class OverviewActivity extends AppCompatActivity {
             showMessage("Delete all...");
             return true;
         } else if (item.getItemId() == R.id.runSync) {
-            //crudOperations.updateToDoItem();
-            //crudOperations.readAllToDoItems();
-            showMessage("Run sync");
+            this.operationRunner.run(
+                    () -> crudOperations.readAllToDoItems(),
+                    result -> {
+                        showMessage("Run sync");
+                    }
+            );
             return true;
         } else if (item.getItemId() == R.id.deleteAllItemsLocally) {
             crudOperations.deleteAllTodoItems(false);
             showMessage("Delete all... Locally");
             return true;
         } else if (item.getItemId() == R.id.deleteAllItemsRemote) {
-            crudOperations.deleteAllTodoItems(true);
-            showMessage("Delete all... Remote");
+            this.operationRunner.run(
+                    () -> crudOperations.deleteAllTodoItems(true),
+                    result -> {
+                        if (result) {
+                            showMessage("Delete all... Remote");
+                        } else {
+                            showMessage("Not possible to delete Remote Data");
+                        }
+                    }
+            );
             return true;
         } else {
             return super.onOptionsItemSelected(item);

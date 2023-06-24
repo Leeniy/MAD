@@ -7,6 +7,8 @@ public class SyncedToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperations
     private IToDoItemCRUDOperations localCRUD;
     private IToDoItemCRUDOperations remoteCRUD;
 
+    private boolean synced;
+
     public SyncedToDoItemCRUDOperationsImpl (IToDoItemCRUDOperations localCRUD, IToDoItemCRUDOperations remoteCRUD){
         this.localCRUD = localCRUD;
         this.remoteCRUD = remoteCRUD;
@@ -21,7 +23,25 @@ public class SyncedToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperations
 
     @Override
     public List<ToDoItem> readAllToDoItems() {
+        if (!synced) {
+            this.syncLocalAndRemote();
+            this.synced = true;
+        }
         return localCRUD.readAllToDoItems();
+    }
+
+    private void syncLocalAndRemote() {
+        if (this.localCRUD.readAllToDoItems() != null) {
+            deleteAllRemoteToDoItems();
+            for (ToDoItem item : localCRUD.readAllToDoItems()) {
+                remoteCRUD.createToDoItem(item);
+            }
+        } else {
+            deleteAllLocaToDoItems();
+            for (ToDoItem item : remoteCRUD.readAllToDoItems()) {
+                localCRUD.createToDoItem(item);
+            }
+        }
     }
 
     @Override
@@ -47,11 +67,11 @@ public class SyncedToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperations
     }
 
     @Override
-    public void deleteAllTodoItems(boolean remote) {
+    public boolean deleteAllTodoItems(boolean remote) {
         if (remote){
-            this.remoteCRUD.deleteAllTodoItems(remote);
+            return this.remoteCRUD.deleteAllTodoItems(remote);
         } else {
-            this.localCRUD.deleteAllTodoItems(remote);
+            return this.localCRUD.deleteAllTodoItems(remote);
         }
     }
 

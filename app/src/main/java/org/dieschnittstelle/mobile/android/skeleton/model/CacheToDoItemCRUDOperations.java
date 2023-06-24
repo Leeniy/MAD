@@ -64,8 +64,12 @@ public class CacheToDoItemCRUDOperations implements IToDoItemCRUDOperations{
     }
 
     @Override
-    public void deleteAllTodoItems(boolean remote) {
-
+    public boolean deleteAllTodoItems(boolean remote) {
+        if (remote){
+            return this.realCrudOperations.deleteAllTodoItems(remote);
+        } else {
+            return this.realCrudOperations.deleteAllTodoItems(remote);
+        }
     }
 
     @Override

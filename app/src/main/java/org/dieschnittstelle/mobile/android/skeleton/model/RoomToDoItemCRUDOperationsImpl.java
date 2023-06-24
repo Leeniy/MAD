@@ -76,13 +76,20 @@ public class RoomToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperations {
     }
 
     @Override
-    public void deleteAllTodoItems(boolean remote) {
+    public boolean deleteAllTodoItems(boolean remote) {
+        if (remote){
+            return false;
+        } else {
+            deleteAllLocaToDoItems();
+            return true;
+        }
 
     }
 
     @Override
     public boolean deleteAllLocaToDoItems() {
-        return false;
+        //db.getDao().delete();
+        return true;
     }
 
     @Override

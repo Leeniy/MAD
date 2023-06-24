@@ -14,7 +14,7 @@ public interface IToDoItemCRUDOperations {
 
     public boolean deleteToDoItem(long id);
 
-    public void deleteAllTodoItems(boolean remote);
+    public boolean deleteAllTodoItems(boolean remote);
 
     public boolean deleteAllLocaToDoItems();
 
