@@ -72,12 +72,24 @@
             android:onEditorAction="@{(view, actionId, event) -> viemodel.checkPWFieldInputCompleted(actionId)}"
             android:onTextChanged="@{(a, s, b, c) -> viemodel.onPWFieldInputChanged()}">
         </com.google.android.material.textfield.TextInputEditText>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Sign in"
-            android:id="@+id/login_button"/>
         </com.google.android.material.textfield.TextInputLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/pwWrapper"
+        android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/errorFaildLogin"
+        android:text="PW and/ or Mail are incorrect"
+        android:textColor="#CE0606"
+        android:visibility="invisible"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sign in"
+        android:id="@+id/login_button"/>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

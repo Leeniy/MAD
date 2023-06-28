@@ -22,6 +22,8 @@ public interface ILoginViewModel {
 
     public String getMail();
 
+    public boolean getVisibility();
+
     public void setPw(String pw);
 
     public void setMail(String mail);

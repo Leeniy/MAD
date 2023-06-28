@@ -1,10 +1,13 @@
 package org.dieschnittstelle.mobile.android.skeleton;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.dieschnittstelle.mobile.android.skeleton.databinding.ActivityLoginBinding;
+import org.dieschnittstelle.mobile.android.skeleton.generated.callback.OnEditorActionListener;
 import org.dieschnittstelle.mobile.android.skeleton.model.IToDoItemCRUDOperations;
 import org.dieschnittstelle.mobile.android.skeleton.model.RetrofitToDoItemCRUDOperationsImpl;
 import org.dieschnittstelle.mobile.android.skeleton.model.User;
@@ -94,6 +98,7 @@ public class LoginActivity extends AppCompatActivity {
                 binding.loginButton.setEnabled(loginViewmodel.getLoginstatus());
             }
         });
+
         this.binding.loginEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,6 +115,11 @@ public class LoginActivity extends AppCompatActivity {
                     //loginStatus(new User(mail.getText().toString(), pw.getText().toString()));
                     User user = new User(mail.getText().toString(), pw.getText().toString());
                     Log.i(OverviewActivity.class.getSimpleName(), "user: " + user);
+                    /*ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
+                    progressDialog.setMessage("Loading..."); // Setting Message
+                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
+                    progressDialog.show(); // Display Progress Dialog
+                    progressDialog.setCancelable(false);*/
                     operationRunner.run(
                             () -> crudOperations.login(user),
                             login -> {
@@ -117,7 +127,15 @@ public class LoginActivity extends AppCompatActivity {
                                     startActivity(intent);
                                 } else {
                                     Log.i(OverviewActivity.class.getSimpleName(), "status: " + login);
+                                    findViewById(R.id.errorFaildLogin).setVisibility(View.VISIBLE);
                                 }
+                                try {
+                                    Thread.sleep(2000);
+                                } catch (Exception e)
+                                {
+                                    throw new RuntimeException(e);
+                                }
+                                //progressDialog.cancel();
                             });
 
                 } catch (Exception e) {

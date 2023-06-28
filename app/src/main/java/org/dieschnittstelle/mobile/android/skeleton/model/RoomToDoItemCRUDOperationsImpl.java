@@ -33,6 +33,9 @@ public class RoomToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperations {
         @Delete
         public void delete(ToDoItem item);
 
+        @Query ("DELETE FROM todoitem")
+        public void delete();
+
     }
 
     @Database(entities = {ToDoItem.class}, version = 1)
@@ -88,7 +91,7 @@ public class RoomToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperations {
 
     @Override
     public boolean deleteAllLocaToDoItems() {
-        //db.getDao().delete();
+        db.getDao().delete();
         return true;
     }
 
@@ -98,7 +101,7 @@ public class RoomToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperations {
     }
 
     @Override
-    public Boolean login(User user) {
+    public boolean login(User user) {
         return false;
     }
 

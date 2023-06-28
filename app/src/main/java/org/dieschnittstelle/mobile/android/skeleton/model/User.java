@@ -11,33 +11,35 @@ import java.util.Objects;
 @Entity
 public class User implements Serializable {
 
-    private String mail;
+    //private static final long serialVersionUID = -7306724305413428761L;
 
-    private String pw;
+    private String pwd;
 
-    public User(){
+    private String email;
+
+    public User() {
 
     }
 
-    public User(String email, String pw){
-        this.mail = email;
-        this.pw = pw;
+    public User(String email,String pwd) {
+        this.email = email;
+        this.pwd = pwd;
     }
 
-    /*public void setMail(String mail) {
-        this.mail = mail;
+    public String getPwd() {
+        return pwd;
     }
 
-    public void setPw(String pw) {
-        this.pw = pw;
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
     }
 
-    public String getMail() {
-        return mail;
+    public String getEmail() {
+        return email;
     }
 
-    public String getPw() {
-        return pw;
-    }*/
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }
 

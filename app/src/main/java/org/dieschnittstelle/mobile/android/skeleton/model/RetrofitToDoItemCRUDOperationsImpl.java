@@ -136,7 +136,7 @@ public class RetrofitToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperatio
     }
 
     @Override
-    public Boolean login(User user){
+    public boolean login(User user){
         try {
             return this.toDoItemResource.login(user).execute().body();
         } catch (Exception e) {

@@ -83,7 +83,7 @@ public class CacheToDoItemCRUDOperations implements IToDoItemCRUDOperations{
     }
 
     @Override
-    public Boolean login(User user) {
-        return false;
+    public boolean login(User user) {
+        return this.realCrudOperations.login(user);
     }
 }

@@ -27,6 +27,8 @@ public class LoginViewModelImpl extends ViewModel implements ILoginViewModel {
 
     private String pw;
 
+    private boolean visibility = false;
+
     private Boolean loginstatus = false;
 
     private Boolean validMail = false;
@@ -56,6 +58,14 @@ public class LoginViewModelImpl extends ViewModel implements ILoginViewModel {
         this.loginstatus = loginstatus;
     }
 
+    public boolean getVisibility() {
+        return visibility;
+    }
+
+    public void setVisibility(boolean visibility) {
+        this.visibility = visibility;
+    }
+
     public boolean checkFieldInputCompleted(int actionId) {
         Log.i(OverviewActivity.class.getSimpleName(), "checkField " + mail);
         String validRegex = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$";
@@ -73,6 +83,7 @@ public class LoginViewModelImpl extends ViewModel implements ILoginViewModel {
     public boolean onNameFieldInputChanged() {
         if (errorStatus.getValue() != null && errorStatus.getValue().length() > 0) {
             errorStatus.setValue(null);
+            setVisibility(false);
         }
         Log.i(DetailviewActivity.class.getSimpleName(), "error " + errorStatus);
         return false;
@@ -97,6 +108,7 @@ public class LoginViewModelImpl extends ViewModel implements ILoginViewModel {
     public boolean onPWFieldInputChanged() {
         if (errorStatusPW.getValue() != null && errorStatusPW.getValue().length() > 0) {
             errorStatusPW.setValue(null);
+            setVisibility(false);
         }
         return false;
     }

@@ -240,8 +240,16 @@ public class OverviewActivity extends AppCompatActivity {
             );
             return true;
         } else if (item.getItemId() == R.id.deleteAllItemsLocally) {
-            crudOperations.deleteAllTodoItems(false);
-            showMessage("Delete all... Locally");
+            this.operationRunner.run(
+                    () -> crudOperations.deleteAllTodoItems(false),
+                    result -> {
+                        if (result) {
+                            showMessage("Delete all... Locally");
+                        } else {
+                            showMessage("Not possible to delete Local Data");
+                        }
+                    }
+            );
             return true;
         } else if (item.getItemId() == R.id.deleteAllItemsRemote) {
             this.operationRunner.run(

@@ -20,6 +20,6 @@ public interface IToDoItemCRUDOperations {
 
     public boolean deleteAllRemoteToDoItems();
 
-    public Boolean login(User user);
+    public boolean login(User user);
 
 }

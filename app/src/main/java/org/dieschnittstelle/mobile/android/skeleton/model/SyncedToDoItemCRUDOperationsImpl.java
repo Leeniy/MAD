@@ -87,7 +87,7 @@ public class SyncedToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperations
     }
 
     @Override
-    public Boolean login(User user) {
-        return false;
+    public boolean login(User user) {
+        return this.remoteCRUD.login(user);
     }
 }
