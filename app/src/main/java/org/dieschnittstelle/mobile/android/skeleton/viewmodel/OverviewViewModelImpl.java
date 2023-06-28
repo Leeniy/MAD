@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel;
 
 import org.dieschnittstelle.mobile.android.skeleton.model.ToDoItem;
 
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 public class OverviewViewModelImpl extends ViewModel implements IOverviewViewModel{
@@ -19,18 +21,24 @@ public class OverviewViewModelImpl extends ViewModel implements IOverviewViewMod
     private List<ToDoItem> items;
     private ToDoItem item;
 
+    private String datetime;
+
     public void setItems(List<ToDoItem> items) {
         this.items = items;
     }
 
     @Override
     public List<ToDoItem> getToDoItem() {
-
         return items;
     }
 
     public void setItem(ToDoItem item) {
         this.item = item;
+    }
+
+
+    public void setDatetime(String datetime) {
+        this.datetime = datetime;
     }
 
     public Comparator<ToDoItem> getCurrentSortMode(){

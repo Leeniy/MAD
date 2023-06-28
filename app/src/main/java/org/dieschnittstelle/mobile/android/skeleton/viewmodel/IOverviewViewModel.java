@@ -14,4 +14,6 @@ public interface IOverviewViewModel {
     public void switchSortMode();
 
     public ToDoItem getItem();
+
+    public void setDatetime(String datetime);
 }
