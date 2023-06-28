@@ -99,7 +99,6 @@ public class DetailviewActivity extends AppCompatActivity {
         Log.i(DetailviewActivity.class.getSimpleName(), "consructor invoked");
     }
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -158,7 +157,7 @@ public class DetailviewActivity extends AppCompatActivity {
                 TextView textView = new TextView(parent.getContext());
                 textView.setText(position);
                 convertView = textView;
-                return textView;
+                return convertView;
             }
         };
 

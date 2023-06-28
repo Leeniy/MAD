@@ -143,6 +143,7 @@ public class OverviewActivity extends AppCompatActivity {
                 itemBinding.setController(OverviewActivity.this);
                 itemBinding.setItem(item);
                 setTimeDate(item);
+                //onOverdue(item);
 
                 return itemBinding.getRoot();
             }
@@ -236,6 +237,7 @@ public class OverviewActivity extends AppCompatActivity {
                     () -> crudOperations.readAllToDoItems(),
                     result -> {
                         showMessage("Run sync");
+                        toDoListViewAdapter.notifyDataSetChanged();
                     }
             );
             return true;
@@ -245,6 +247,7 @@ public class OverviewActivity extends AppCompatActivity {
                     result -> {
                         if (result) {
                             showMessage("Delete all... Locally");
+                            toDoListViewAdapter.notifyDataSetChanged();
                         } else {
                             showMessage("Not possible to delete Local Data");
                         }
@@ -257,6 +260,7 @@ public class OverviewActivity extends AppCompatActivity {
                     result -> {
                         if (result) {
                             showMessage("Delete all... Remote");
+                            toDoListViewAdapter.notifyDataSetChanged();
                         } else {
                             showMessage("Not possible to delete Remote Data");
                         }
@@ -286,7 +290,7 @@ public class OverviewActivity extends AppCompatActivity {
 
     public void onOverdue(ToDoItem item) {
         if (item.getExpiry() < System.currentTimeMillis()) {
-            findViewById(R.id.todoName).setBackgroundColor(Color.BLUE);
+            findViewById(R.id.todoDate).setBackgroundColor(Color.BLUE);
         }
     }
 

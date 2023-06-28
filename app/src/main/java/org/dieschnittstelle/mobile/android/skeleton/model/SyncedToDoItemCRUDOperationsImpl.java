@@ -31,7 +31,7 @@ public class SyncedToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperations
     }
 
     private void syncLocalAndRemote() {
-        if (this.localCRUD.readAllToDoItems() != null) {
+        if (this.localCRUD.readAllToDoItems() == null) {
             deleteAllRemoteToDoItems();
             for (ToDoItem item : localCRUD.readAllToDoItems()) {
                 remoteCRUD.createToDoItem(item);
