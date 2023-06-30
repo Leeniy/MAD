@@ -75,6 +75,8 @@ public class DetailviewActivity extends AppCompatActivity {
 
     private  ImageButton mail;
 
+    private  ImageButton delete;
+
     private String contactName;
 
     private Intent intent;
@@ -175,6 +177,7 @@ public class DetailviewActivity extends AppCompatActivity {
 
                 sms = view.findViewById(R.id.smsButton);
                 mail = view.findViewById(R.id.mailButton);
+                delete = view.findViewById(R.id.deleteButton);
 
                 sms.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -187,6 +190,13 @@ public class DetailviewActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         sendMail(showMail(Long.parseLong(contacts.get(position))));
+                    }
+                });
+
+                delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        contacts.remove(contacts.get(position));
                     }
                 });
 
@@ -449,7 +459,6 @@ public class DetailviewActivity extends AppCompatActivity {
                 boolean isMobile = (phoneNumberType == ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
                 Log.i(LOGGER, "phoneNumber: " + phoneNumber);
                 Log.i(LOGGER, "isMobile: " + isMobile);
-
             }
         }
         return phoneNumber;

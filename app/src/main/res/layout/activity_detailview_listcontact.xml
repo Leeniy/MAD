@@ -15,27 +15,36 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:focusable="false"
-            android:layout_gravity="center_vertical"
-            android:id="@+id/smsButton"
-            android:src="@drawable/sms"/>
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:layout_gravity="center_vertical"
+                    android:id="@+id/smsButton"
+                    android:src="@drawable/sms"/>
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:focusable="false"
-            android:id="@+id/mailButton"
-            android:src="@drawable/mail"/>
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:focusable="false"
+                    android:id="@+id/mailButton"
+                    android:src="@drawable/mail"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/contactName"
-            android:textSize="20dp" />
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:focusable="false"
+                    android:id="@+id/deleteButton"
+                    android:src="@drawable/delete"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/contactName"
+                    android:textSize="20dp"
+                    android:layout_gravity="center_vertical"/>
 
  </LinearLayout>
 </layout>
