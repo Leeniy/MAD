@@ -24,12 +24,10 @@ public class ToDoItem implements Serializable {
 
     @TypeConverters(ListConverters.class)
     @SerializedName("contacts")
-    private List<String> contactId = new ArrayList<>();
+    private List<String> contactId;
     @SerializedName("done")
     private boolean checked;
     private boolean favourite;
-
-
 
     public ToDoItem() {
     }

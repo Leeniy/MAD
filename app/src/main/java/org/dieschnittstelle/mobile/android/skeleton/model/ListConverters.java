@@ -14,8 +14,8 @@ public class ListConverters {
     @TypeConverter
     public static String makeStringFromListOfStrings(List<String> stringList){
 
-        if (stringList == null){
-            return "";
+        if (stringList != null){
+            return null;
         }
         return stringList.stream().distinct().collect(Collectors.joining(SEPARATOR));
     }

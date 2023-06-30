@@ -32,6 +32,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.dieschnittstelle.mobile.android.skeleton.databinding.ActivityOverviewListitemBinding;
 import org.dieschnittstelle.mobile.android.skeleton.model.IToDoItemCRUDOperations;
+import org.dieschnittstelle.mobile.android.skeleton.model.SyncedToDoItemCRUDOperationsImpl;
 import org.dieschnittstelle.mobile.android.skeleton.model.ToDoItem;
 import org.dieschnittstelle.mobile.android.skeleton.util.MADAsyncOperationRunner;
 import org.dieschnittstelle.mobile.android.skeleton.viewmodel.OverviewViewModelImpl;
@@ -40,6 +41,7 @@ import org.dieschnittstelle.mobile.android.skeleton.viewmodel.OverviewViewModelI
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class OverviewActivity extends AppCompatActivity {
 
@@ -93,10 +95,6 @@ public class OverviewActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
-        /*if (((ToDoItemApplication) getApplication()).isOffLineMode()){
-            startActivity(new Intent(this, DetailviewActivity.class));
-        }*/
-
         setContentView(R.layout.activity_overview);
         this.overviewViewModel = new ViewModelProvider(this).get(OverviewViewModelImpl.class);
 
@@ -143,7 +141,6 @@ public class OverviewActivity extends AppCompatActivity {
                 itemBinding.setController(OverviewActivity.this);
                 itemBinding.setItem(item);
                 setTimeDate(item);
-                //onOverdue(item);
 
                 return itemBinding.getRoot();
             }
@@ -167,6 +164,7 @@ public class OverviewActivity extends AppCompatActivity {
                     toDoItems -> {
                         overviewViewModel.getToDoItem().addAll(toDoItems);
                         sortToDoItems();
+                        //onOverdue(toDoItems);
                     });
         }
 
@@ -288,9 +286,13 @@ public class OverviewActivity extends AppCompatActivity {
         );
     }
 
-    public void onOverdue(ToDoItem item) {
-        if (item.getExpiry() < System.currentTimeMillis()) {
-            findViewById(R.id.todoDate).setBackgroundColor(Color.BLUE);
+    public void onOverdue(List<ToDoItem> items) {
+        for (ToDoItem item: items
+             ) {
+            if (item.getExpiry() < System.currentTimeMillis()) {
+                toDoListView.findViewById(R.id.todoDate).setBackgroundColor(Color.BLUE);
+                //findViewById(R.id.todoDate).setBackgroundColor(Color.BLUE);
+            }
         }
     }
 

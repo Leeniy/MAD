@@ -7,10 +7,10 @@
                     type="org.dieschnittstelle.mobile.android.skeleton.model.ToDoItem" />
                 <variable
                     name="controller"
-                    type="org.dieschnittstelle.mobile.android.skeleton.OverviewActivity" />
+                    type="org.dieschnittstelle.mobile.android.skeleton.DetailviewActivity" />
         </data>
 
-<LinearLayout
+        <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/contactName"
-            android:text="test"
             android:textSize="20dp" />
+
  </LinearLayout>
 </layout>
