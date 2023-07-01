@@ -398,7 +398,7 @@ public class DetailviewActivity extends AppCompatActivity {
 
     private void selectContect() {
         this.showContectsLuncher.launch(new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI));
-        listView.invalidate();
+        listView.postInvalidate();
     }
     @SuppressLint("Range")
     private void onContactSelected(Intent resultData) {
@@ -418,6 +418,7 @@ public class DetailviewActivity extends AppCompatActivity {
              showContactDetailsForInternalId(intentContactId);
         }
         cursor.close();
+        listviewAdapter.notifyDataSetChanged();
     }
 
     public long lastSelectedInternalCOntactId = -1;
