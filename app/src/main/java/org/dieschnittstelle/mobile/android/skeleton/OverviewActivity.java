@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -61,6 +62,8 @@ public class OverviewActivity extends AppCompatActivity {
     private String timeDate;
 
     private Intent intent;
+
+    TextView date;
 
     private ActivityResultLauncher<Intent> DetailviewLauncherForEdit = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -108,6 +111,7 @@ public class OverviewActivity extends AppCompatActivity {
 
         this.toDoListView = findViewById(R.id.toDoListView);
         this.fab = findViewById(R.id.fab);
+        this.date = toDoListView.findViewById(R.id.todoDate);
 
         intent = new Intent(this, OverviewActivity.class);
 
@@ -141,6 +145,7 @@ public class OverviewActivity extends AppCompatActivity {
                 itemBinding.setController(OverviewActivity.this);
                 itemBinding.setItem(item);
                 setTimeDate(item);
+                //onOverdue(item);
 
                 return itemBinding.getRoot();
             }
@@ -235,9 +240,9 @@ public class OverviewActivity extends AppCompatActivity {
                     () -> crudOperations.readAllToDoItems(),
                     result -> {
                         showMessage("Run sync");
-                        toDoListViewAdapter.notifyDataSetChanged();
                     }
             );
+            toDoListViewAdapter.notifyDataSetChanged();
             return true;
         } else if (item.getItemId() == R.id.deleteAllItemsLocally) {
             this.operationRunner.run(
@@ -245,12 +250,13 @@ public class OverviewActivity extends AppCompatActivity {
                     result -> {
                         if (result) {
                             showMessage("Delete all... Locally");
-                            toDoListViewAdapter.notifyDataSetChanged();
+
                         } else {
                             showMessage("Not possible to delete Local Data");
                         }
                     }
             );
+            toDoListViewAdapter.notifyDataSetChanged();
             return true;
         } else if (item.getItemId() == R.id.deleteAllItemsRemote) {
             this.operationRunner.run(
@@ -258,12 +264,13 @@ public class OverviewActivity extends AppCompatActivity {
                     result -> {
                         if (result) {
                             showMessage("Delete all... Remote");
-                            toDoListViewAdapter.notifyDataSetChanged();
+
                         } else {
                             showMessage("Not possible to delete Remote Data");
                         }
                     }
             );
+            toDoListViewAdapter.notifyDataSetChanged();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -286,14 +293,11 @@ public class OverviewActivity extends AppCompatActivity {
         );
     }
 
-    public void onOverdue(List<ToDoItem> items) {
-        for (ToDoItem item: items
-             ) {
+    public void onOverdue(ToDoItem item) {
             if (item.getExpiry() < System.currentTimeMillis()) {
-                toDoListView.findViewById(R.id.todoDate).setBackgroundColor(Color.BLUE);
+                date.setBackgroundColor(Color.BLUE);
                 //findViewById(R.id.todoDate).setBackgroundColor(Color.BLUE);
             }
-        }
     }
 
     public String getTimeDate() {
@@ -303,7 +307,7 @@ public class OverviewActivity extends AppCompatActivity {
     public void setTimeDate(ToDoItem item) {
         long expiry = item.getExpiry();
         Date df = new java.util.Date(expiry);
-        this.timeDate = new SimpleDateFormat("dd.MM.yyyy hh:mm").format(df);
-        overviewViewModel.setDatetime(this.timeDate);
+        timeDate = new SimpleDateFormat("dd.MM.yyyy hh:mm").format(df);
+        overviewViewModel.setDatetime(timeDate);
     }
 }

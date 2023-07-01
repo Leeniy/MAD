@@ -77,8 +77,8 @@ public class SyncedToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperations
 
     @Override
     public boolean deleteAllLocaToDoItems() {
-        //return ((RoomToDoItemCRUDOperationsImpl)this.remoteCRUD).de();
-        return true;
+        return ((RoomToDoItemCRUDOperationsImpl)this.localCRUD).deleteAllTodoItems(false);
+        //return true;
     }
 
     @Override
