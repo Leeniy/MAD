@@ -1,5 +1,9 @@
 package org.dieschnittstelle.mobile.android.skeleton.model;
 
+import android.util.Log;
+
+import org.dieschnittstelle.mobile.android.skeleton.OverviewActivity;
+
 import java.util.List;
 
 public class SyncedToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperations{
@@ -12,6 +16,7 @@ public class SyncedToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperations
     public SyncedToDoItemCRUDOperationsImpl (IToDoItemCRUDOperations localCRUD, IToDoItemCRUDOperations remoteCRUD){
         this.localCRUD = localCRUD;
         this.remoteCRUD = remoteCRUD;
+        this.synced = false;
     }
 
     @Override
@@ -27,20 +32,24 @@ public class SyncedToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperations
             this.syncLocalAndRemote();
             this.synced = true;
         }
+        Log.i(SyncedToDoItemCRUDOperationsImpl.class.getSimpleName(), "sync status " + synced);
         return localCRUD.readAllToDoItems();
     }
 
     private void syncLocalAndRemote() {
-        if (this.localCRUD.readAllToDoItems() != null) {
+        if (localCRUD.readAllToDoItems() == null) {
             deleteAllTodoItems(true);
             for (ToDoItem item : localCRUD.readAllToDoItems()) {
                 remoteCRUD.createToDoItem(item);
             }
+            Log.i(SyncedToDoItemCRUDOperationsImpl.class.getSimpleName(), "Created item in remote CRUD");
         } else {
             deleteAllTodoItems(false);
             for (ToDoItem item : remoteCRUD.readAllToDoItems()) {
                 localCRUD.createToDoItem(item);
+
             }
+            Log.i(SyncedToDoItemCRUDOperationsImpl.class.getSimpleName(), "Created item in local CRUD");
         }
     }
 

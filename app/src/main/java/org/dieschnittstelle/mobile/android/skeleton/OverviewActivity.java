@@ -107,7 +107,7 @@ public class OverviewActivity extends AppCompatActivity {
             initialViewmodel = true;
         }
 
-        crudOperations = ((ToDoItemApplication)this.getApplication()).getCRUDOperations();
+        this.crudOperations = ((ToDoItemApplication)this.getApplication()).getCRUDOperations();
 
         this.toDoListView = findViewById(R.id.toDoListView);
         this.fab = findViewById(R.id.fab);
@@ -180,6 +180,7 @@ public class OverviewActivity extends AppCompatActivity {
                     toDoItems -> {
                         overviewViewModel.getToDoItem().addAll(toDoItems);
                         sortToDoItems();
+                        Log.i(ToDoItemApplication.class.getSimpleName(), "load " + toDoItems);
                         //onOverdue(toDoItems);
                     });
         }
@@ -238,17 +239,12 @@ public class OverviewActivity extends AppCompatActivity {
             sortToDoItems();
             showMessage("Sorting...");
             return true;
-        }
-        else if (item.getItemId() == R.id.deleteAllItems){
-            showMessage("DELETE ALL ITEMS LOCALLY");
-            //crudOperations.deleteAllTodoItems(true);
-            showMessage("Delete all...");
-            return true;
         } else if (item.getItemId() == R.id.runSync) {
             this.operationRunner.run(
                     () -> crudOperations.readAllToDoItems(),
                     result -> {
                         showMessage("Run sync");
+                        Log.i(OverviewActivity.class.getSimpleName(), "crud " + crudOperations);
                     }
             );
             this.toDoListView.setAdapter(toDoListViewAdapter);

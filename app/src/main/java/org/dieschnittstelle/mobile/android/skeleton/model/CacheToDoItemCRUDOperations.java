@@ -1,5 +1,7 @@
 package org.dieschnittstelle.mobile.android.skeleton.model;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,10 +25,30 @@ public class CacheToDoItemCRUDOperations implements IToDoItemCRUDOperations{
 
     @Override
     public List<ToDoItem> readAllToDoItems() {
-        if (toDoItemMap.size() == 0) {
+        /*if (toDoItemMap.size() != 0) {
             realCrudOperations.readAllToDoItems().forEach(item -> {
                 if (!toDoItemMap.containsValue(item.getId())) {
                     toDoItemMap.put(item.getId(), item);
+                    Log.i(CacheToDoItemCRUDOperations.class.getSimpleName(), "sync");
+                }
+            });
+        } else {
+            realCrudOperations.readAllToDoItems().forEach(item -> {
+                toDoItemMap.put(item.getId(), item);
+            });
+
+        Log.i(CacheToDoItemCRUDOperations.class.getSimpleName(), "fail");
+        return new ArrayList<>(toDoItemMap.values());*/
+        if (realCrudOperations.readAllToDoItems() != null) {
+            realCrudOperations.readAllToDoItems().forEach(item -> {
+                toDoItemMap.put(item.getId(), item);
+            });
+            Log.i(CacheToDoItemCRUDOperations.class.getSimpleName(), "local");
+        } else {
+            realCrudOperations.readAllToDoItems().forEach(item -> {
+                if (!toDoItemMap.containsKey(item.getId())) {
+                    toDoItemMap.put(item.getId(), item);
+                    Log.i(CacheToDoItemCRUDOperations.class.getSimpleName(), "sync");
                 }
             });
         }

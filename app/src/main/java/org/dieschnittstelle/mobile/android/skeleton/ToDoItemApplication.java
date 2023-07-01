@@ -31,17 +31,20 @@ public class ToDoItemApplication extends Application {
                             new RetrofitToDoItemCRUDOperationsImpl());
                     this.crudOperations = new CacheToDoItemCRUDOperations(crudOperations);
                     Toast.makeText(this, "Using synched data access", Toast.LENGTH_LONG).show();
+                Log.i(ToDoItemApplication.class.getSimpleName(), "crud sync " + crudOperations);
             } else {
                 this.crudOperations = new CacheToDoItemCRUDOperations(new RoomToDoItemCRUDOperationsImpl(this));
                 this.offLineMode = true;
                 Toast.makeText(this, "Remote api not accessible. Using local data access", Toast.LENGTH_LONG).show();
+                Log.i(ToDoItemApplication.class.getSimpleName(), "crud local " + crudOperations);
             }
 
         }
            catch (Exception e){
-            //this.crudOperations = new RoomToDoItemCRUDOperationsImpl(this);
+            this.crudOperations = new RoomToDoItemCRUDOperationsImpl(this);
             this.offLineMode = true;
                throw new RuntimeException("Got excepting trying to run future for checking conectivity: ");
+
        }
     }
 
