@@ -24,7 +24,7 @@ public class ToDoItem implements Serializable {
 
     @TypeConverters(ListConverters.class)
     @SerializedName("contacts")
-    private List<String> contactId;
+    private List<String> contactId ;
     @SerializedName("done")
     private boolean checked;
     private boolean favourite;
@@ -86,9 +86,6 @@ public class ToDoItem implements Serializable {
     }
 
     public List<String> getContactId() {
-        if (contactId == null){
-            this.contactId = new ArrayList<>();
-        }
         return contactId;
     }
 
