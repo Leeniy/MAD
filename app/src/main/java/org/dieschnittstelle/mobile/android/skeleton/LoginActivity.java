@@ -89,6 +89,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 binding.loginButton.setEnabled(loginViewmodel.getLoginstatus());
+                findViewById(R.id.errorFaildLogin).setVisibility(View.INVISIBLE);
             }
         });
 
@@ -96,6 +97,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 binding.loginButton.setEnabled(loginViewmodel.getLoginstatus());
+                findViewById(R.id.errorFaildLogin).setVisibility(View.INVISIBLE);
             }
         });
 
@@ -103,6 +105,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 binding.loginButton.setEnabled(loginViewmodel.getLoginstatus());
+                findViewById(R.id.errorFaildLogin).setVisibility(View.INVISIBLE);
             }
         });
 

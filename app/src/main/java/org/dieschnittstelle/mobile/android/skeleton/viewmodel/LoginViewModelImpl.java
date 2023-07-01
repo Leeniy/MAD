@@ -68,9 +68,9 @@ public class LoginViewModelImpl extends ViewModel implements ILoginViewModel {
 
     public boolean checkFieldInputCompleted(int actionId) {
         Log.i(OverviewActivity.class.getSimpleName(), "checkField " + mail);
-        String validRegex = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$";
+        String validRegex = "^[a-zA-Z0-9.!#$%&'*+/=?^_{|}~-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$";
 
-            if (mail == null || !mail.matches(validRegex)){
+            if (mail == null || !mail.matches(validRegex)) {
                 errorStatus.setValue("Invalid Email Address");
                 validMail = false;
             } else {
