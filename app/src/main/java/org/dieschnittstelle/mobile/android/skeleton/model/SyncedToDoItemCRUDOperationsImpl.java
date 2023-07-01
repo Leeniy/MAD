@@ -31,13 +31,13 @@ public class SyncedToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperations
     }
 
     private void syncLocalAndRemote() {
-        if (this.localCRUD.readAllToDoItems() == null) {
-            deleteAllRemoteToDoItems();
+        if (this.localCRUD.readAllToDoItems() != null) {
+            deleteAllTodoItems(true);
             for (ToDoItem item : localCRUD.readAllToDoItems()) {
                 remoteCRUD.createToDoItem(item);
             }
         } else {
-            deleteAllLocaToDoItems();
+            deleteAllTodoItems(false);
             for (ToDoItem item : remoteCRUD.readAllToDoItems()) {
                 localCRUD.createToDoItem(item);
             }
@@ -73,17 +73,6 @@ public class SyncedToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperations
         } else {
             return this.localCRUD.deleteAllTodoItems(remote);
         }
-    }
-
-    @Override
-    public boolean deleteAllLocaToDoItems() {
-        return ((RoomToDoItemCRUDOperationsImpl)this.localCRUD).deleteAllTodoItems(false);
-        //return true;
-    }
-
-    @Override
-    public boolean deleteAllRemoteToDoItems() {
-        return ((RetrofitToDoItemCRUDOperationsImpl)this.remoteCRUD).deleteAllTodos();
     }
 
     @Override

@@ -39,7 +39,7 @@ public class ToDoItemApplication extends Application {
 
         }
            catch (Exception e){
-            this.crudOperations = new RoomToDoItemCRUDOperationsImpl(this);
+            //this.crudOperations = new RoomToDoItemCRUDOperationsImpl(this);
             this.offLineMode = true;
                throw new RuntimeException("Got excepting trying to run future for checking conectivity: ");
        }

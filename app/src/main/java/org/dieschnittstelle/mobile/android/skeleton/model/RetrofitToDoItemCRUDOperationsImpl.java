@@ -115,21 +115,10 @@ public class RetrofitToDoItemCRUDOperationsImpl implements IToDoItemCRUDOperatio
         }
     }
 
-    @Override
-    public boolean deleteAllLocaToDoItems() {
-        return false;
-    }
-
-    @Override
-    public boolean deleteAllRemoteToDoItems() {
-        return false;
-    }
-
 
     public boolean deleteAllTodos(){
         try {
-            this.toDoItemResource.deleteAllTodos().execute().body();
-            return true;
+            return this.toDoItemResource.deleteAllTodos().execute().body();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

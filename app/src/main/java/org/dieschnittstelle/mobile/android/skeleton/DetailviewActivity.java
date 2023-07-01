@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -51,6 +52,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class DetailviewActivity extends AppCompatActivity {
 
@@ -76,6 +78,8 @@ public class DetailviewActivity extends AppCompatActivity {
     private  ImageButton mail;
 
     private  ImageButton delete;
+
+    private TextView name;
 
     private String contactName;
 
@@ -105,6 +109,8 @@ public class DetailviewActivity extends AppCompatActivity {
     Date df;
 
     Long expiry;
+
+    List<String> contacts;
 
     public DetailviewActivity(){
         Log.i(DetailviewActivity.class.getSimpleName(), "consructor invoked");
@@ -160,6 +166,8 @@ public class DetailviewActivity extends AppCompatActivity {
         });
 
         this.binding.setViewmodel(this.detailViewmodel);
+        contacts = detailViewmodel.getItem().getContactId();
+
 
         this.listviewAdapter = new ArrayAdapter<>(this, R.layout.activity_detailview_listcontact, detailViewmodel.getItem().getContactId()) {
             @NonNull
@@ -167,17 +175,13 @@ public class DetailviewActivity extends AppCompatActivity {
             public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
 
                 if (view == null ){
-                    view = LayoutInflater.from(getContext()).inflate(R.layout.activity_detailview_listcontact, null, false);
+                    view = LayoutInflater.from(getContext()).inflate(R.layout.activity_detailview_listcontact, parent, false);
                 }
-
-                TextView contactName = view.findViewById(R.id.contactName);
-                List<String> contacts = detailViewmodel.getItem().getContactId();
-                contactName.setText(showNameForInternalId(Long.parseLong(contacts.get(position))));
-                Log.i(OverviewActivity.class.getSimpleName(), "position: " + contacts.get(position) +" name: " + showNameForInternalId(Long.parseLong(contacts.get(position))));
 
                 sms = view.findViewById(R.id.smsButton);
                 mail = view.findViewById(R.id.mailButton);
                 delete = view.findViewById(R.id.deleteButton);
+                name = view.findViewById(R.id.contactName);
 
                 sms.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -200,18 +204,31 @@ public class DetailviewActivity extends AppCompatActivity {
                     }
                 });
 
+
+                if (Objects.equals(showPhoneNumber(Long.parseLong(contacts.get(position))), " ") || showPhoneNumber(Long.parseLong(contacts.get(position))) != null){
+                    sms.setVisibility(View.VISIBLE);
+                } else {
+                    sms.setVisibility(View.INVISIBLE);
+                }
+
+                if (Objects.equals(showMail(Long.parseLong(contacts.get(position))), " ") || showPhoneNumber(Long.parseLong(contacts.get(position))) != null){
+                    mail.setVisibility(View.VISIBLE);
+                } else {
+                    mail.setVisibility(View.INVISIBLE);
+                }
+
+                String conname = showNameForInternalId(Long.parseLong(contacts.get(position)));
+                name.setText(conname);
+                name.setTextColor(Color.BLACK);
+                Log.i(OverviewActivity.class.getSimpleName(), "position: " + contacts.get(position) +" name: " + conname);
+
                 return view;
             }
         };
 
-        this.binding.contactListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-        });
-
         this.binding.contactListView.setAdapter(listviewAdapter);
+
+
 
         Log.i(DetailviewActivity.class.getSimpleName(), "List:  " + detailViewmodel.getItem().getContactId());
 
@@ -381,6 +398,7 @@ public class DetailviewActivity extends AppCompatActivity {
 
     private void selectContect() {
         this.showContectsLuncher.launch(new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI));
+        listView.invalidate();
     }
     @SuppressLint("Range")
     private void onContactSelected(Intent resultData) {
@@ -399,6 +417,7 @@ public class DetailviewActivity extends AppCompatActivity {
              this.detailViewmodel.getItem().getContactId().add(String.valueOf(intentContactId));
              showContactDetailsForInternalId(intentContactId);
         }
+        cursor.close();
     }
 
     public long lastSelectedInternalCOntactId = -1;
@@ -428,20 +447,22 @@ public class DetailviewActivity extends AppCompatActivity {
                 String emailaddr = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS));
                 Log.i(LOGGER, "isMobile: " + emailaddr);
             }
-
+        cursor.close();
         }
     }
 
     @SuppressLint("Range")
     public String showNameForInternalId (long internalContectId) {
         lastSelectedInternalCOntactId = internalContectId;
+        String contactName = "";
         if (hasContactPermission()) {
             Log.i(LOGGER, "showContactDetailsForInternalId(): " + internalContectId);
             Cursor cursor = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, ContactsContract.Contacts._ID + "=?", new String[]{String.valueOf(internalContectId)}, null);
             if (cursor.moveToFirst()) {
-                String contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
                 Log.i(LOGGER, "contactName for id: " + contactName);
             }
+            //cursor.close();
         }
         return contactName;
     }
@@ -460,6 +481,7 @@ public class DetailviewActivity extends AppCompatActivity {
                 Log.i(LOGGER, "phoneNumber: " + phoneNumber);
                 Log.i(LOGGER, "isMobile: " + isMobile);
             }
+            cursor.close();
         }
         return phoneNumber;
     }
@@ -473,8 +495,9 @@ public class DetailviewActivity extends AppCompatActivity {
             Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null, ContactsContract.CommonDataKinds.Email.CONTACT_ID+"=?", new String[]{String.valueOf(internalContectId)}, null);
             while (cursor.moveToNext()){
                 emailaddr = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS));
-                Log.i(LOGGER, "isMobile: " + emailaddr);
+                Log.i(LOGGER, "Mail: " + emailaddr);
             }
+            cursor.close();
         }
         return emailaddr;
     }

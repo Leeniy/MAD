@@ -16,10 +16,6 @@ public interface IToDoItemCRUDOperations {
 
     public boolean deleteAllTodoItems(boolean remote);
 
-    public boolean deleteAllLocaToDoItems();
-
-    public boolean deleteAllRemoteToDoItems();
-
     public boolean login(User user);
 
 }

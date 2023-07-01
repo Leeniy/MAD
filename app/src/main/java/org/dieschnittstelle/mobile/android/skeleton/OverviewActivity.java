@@ -111,7 +111,6 @@ public class OverviewActivity extends AppCompatActivity {
 
         this.toDoListView = findViewById(R.id.toDoListView);
         this.fab = findViewById(R.id.fab);
-        this.date = toDoListView.findViewById(R.id.todoDate);
 
         intent = new Intent(this, OverviewActivity.class);
 
@@ -140,12 +139,24 @@ public class OverviewActivity extends AppCompatActivity {
                     itemBinding.getRoot().setTag(itemBinding);
                 }
 
+                date = itemBinding.todoDate;
+                TextView datetext = itemBinding.todoDate;
+
                 ToDoItem item = super.getItem(position);
                 itemBinding.setItem(item);
                 itemBinding.setController(OverviewActivity.this);
                 itemBinding.setItem(item);
-                setTimeDate(item);
-                //onOverdue(item);
+
+                long expiry = item.getExpiry();
+                Date df = new java.util.Date(expiry);
+                timeDate = new SimpleDateFormat("dd.MM.yyyy hh:mm").format(df);
+                datetext.setText(timeDate);
+
+                if (item.getExpiry() < System.currentTimeMillis() || item.getExpiry() == null) {
+                    date.setTextColor(Color.BLUE);
+                } else {
+                    date.setTextColor(Color.BLACK);
+                }
 
                 return itemBinding.getRoot();
             }
@@ -191,7 +202,6 @@ public class OverviewActivity extends AppCompatActivity {
                 () -> this.crudOperations.createToDoItem(item),
                 createdToDoItem -> {
                     this.toDoListViewAdapter.add(createdToDoItem);
-                    setTimeDate(item);
                     sortToDoItems();
                 }
         );
@@ -206,7 +216,6 @@ public class OverviewActivity extends AppCompatActivity {
                     this.overviewViewModel.getToDoItem().remove(posOfToDoItemInList);
                     this.overviewViewModel.getToDoItem().add(item);
                     sortToDoItems();
-                    setTimeDate(item);
                     toDoListViewAdapter.notifyDataSetChanged();
                 }
         );
@@ -242,7 +251,7 @@ public class OverviewActivity extends AppCompatActivity {
                         showMessage("Run sync");
                     }
             );
-            toDoListViewAdapter.notifyDataSetChanged();
+            this.toDoListView.setAdapter(toDoListViewAdapter);
             return true;
         } else if (item.getItemId() == R.id.deleteAllItemsLocally) {
             this.operationRunner.run(
@@ -250,13 +259,12 @@ public class OverviewActivity extends AppCompatActivity {
                     result -> {
                         if (result) {
                             showMessage("Delete all... Locally");
-
                         } else {
                             showMessage("Not possible to delete Local Data");
                         }
                     }
             );
-            toDoListViewAdapter.notifyDataSetChanged();
+            this.toDoListView.setAdapter(toDoListViewAdapter);
             return true;
         } else if (item.getItemId() == R.id.deleteAllItemsRemote) {
             this.operationRunner.run(
@@ -264,13 +272,12 @@ public class OverviewActivity extends AppCompatActivity {
                     result -> {
                         if (result) {
                             showMessage("Delete all... Remote");
-
                         } else {
                             showMessage("Not possible to delete Remote Data");
                         }
                     }
             );
-            toDoListViewAdapter.notifyDataSetChanged();
+            this.toDoListView.setAdapter(toDoListViewAdapter);
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -287,27 +294,8 @@ public class OverviewActivity extends AppCompatActivity {
                 () -> crudOperations.updateToDoItem(item),
                 updateditem -> {
                     this.sortToDoItems();
-                    setTimeDate(item);
                     showMessage("Checked change for: " + item.getName());
                 }
         );
-    }
-
-    public void onOverdue(ToDoItem item) {
-            if (item.getExpiry() < System.currentTimeMillis()) {
-                date.setBackgroundColor(Color.BLUE);
-                //findViewById(R.id.todoDate).setBackgroundColor(Color.BLUE);
-            }
-    }
-
-    public String getTimeDate() {
-        return timeDate;
-    }
-
-    public void setTimeDate(ToDoItem item) {
-        long expiry = item.getExpiry();
-        Date df = new java.util.Date(expiry);
-        timeDate = new SimpleDateFormat("dd.MM.yyyy hh:mm").format(df);
-        overviewViewModel.setDatetime(timeDate);
     }
 }

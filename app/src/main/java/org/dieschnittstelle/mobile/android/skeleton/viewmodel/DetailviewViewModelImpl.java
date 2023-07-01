@@ -55,10 +55,6 @@ public class DetailviewViewModelImpl extends ViewModel implements IDetailviewVie
         return this.errorStatus;
     }
 
-    public void onDeleteItem() {
-
-    }
-
     public void setItem(ToDoItem item) {
         this.item = item;
     }

@@ -23,15 +23,11 @@ public class CacheToDoItemCRUDOperations implements IToDoItemCRUDOperations{
 
     @Override
     public List<ToDoItem> readAllToDoItems() {
-        if (toDoItemMap.size() != 0) {
+        if (toDoItemMap.size() == 0) {
             realCrudOperations.readAllToDoItems().forEach(item -> {
                 if (!toDoItemMap.containsValue(item.getId())) {
                     toDoItemMap.put(item.getId(), item);
                 }
-            });
-        } else {
-            realCrudOperations.readAllToDoItems().forEach(item -> {
-                toDoItemMap.put(item.getId(), item);
             });
         }
         return new ArrayList<>(toDoItemMap.values());
@@ -76,16 +72,6 @@ public class CacheToDoItemCRUDOperations implements IToDoItemCRUDOperations{
         } else {
             return this.realCrudOperations.deleteAllTodoItems(remote);
         }
-    }
-
-    @Override
-    public boolean deleteAllLocaToDoItems() {
-        return false;
-    }
-
-    @Override
-    public boolean deleteAllRemoteToDoItems() {
-        return false;
     }
 
     @Override
