@@ -370,12 +370,6 @@ public class DetailviewActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.selectContact) {
             selectContect();
             return true;
-        } else if (item.getItemId() == R.id.sendSMS){
-            //sendSMS();
-            return true;
-        } else if (item.getItemId() == R.id.sendMail){
-            //sendMail();
-            return true;
         } else {
             return super.onOptionsItemSelected(item);
         }

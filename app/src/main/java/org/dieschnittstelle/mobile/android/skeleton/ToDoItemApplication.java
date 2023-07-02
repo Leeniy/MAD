@@ -49,7 +49,7 @@ public class ToDoItemApplication extends Application {
     }
 
     public IToDoItemCRUDOperations getCRUDOperations(){
-        Toast.makeText(this, "Using CRUD Impl:" + crudOperations.getClass(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Using CRUD Impl:" + crudOperations.getClass(), Toast.LENGTH_SHORT).show();
         return this.crudOperations;
     }
 
